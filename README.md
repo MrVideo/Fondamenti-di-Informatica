@@ -7,7 +7,7 @@ Chiunque è il benvenuto a clonare, fare fork e pull request della repo.
 
 ## Aspe', ma di che stai parlando?
 
-Se non conosci Github o Git, ecco qualche link utile che puoi visitare per ottenere più informazioni su cosa sono:
+Se non conosci GitHub o Git, ecco qualche link utile che puoi visitare per ottenere più informazioni su cosa sono:
 * [The beginner's guide to Git & GitHub](https://www.freecodecamp.org/news/the-beginners-guide-to-git-github/)
 * [Git and GitHub for Beginners - Crash Course](https://www.youtube.com/watch?v=RGOj5yH7evk)
 
