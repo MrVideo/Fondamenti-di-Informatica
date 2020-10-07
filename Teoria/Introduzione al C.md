@@ -334,9 +334,9 @@ Consentono di costruire condizioni complesse a partire da condizioni più sempli
 * XOR (Binario)
 Possono essere definiti in maniera univoca con la **tavola della verità**:
 * **Operatori binari**
-![](Introduzione%20al%20C/image_2020-09-30_14-07-27.png)
+![](Introduzione%20al%20C/image_2020-09-30_14-07-27%202.png)
 * **Operatore unario NOT**
-![](Introduzione%20al%20C/image_2020-09-30_14-07-40.png)
+![](Introduzione%20al%20C/image_2020-09-30_14-07-40%202.png)
 
 Nel linguaggio C, la sintassi degli operatori logici è:
 ```
@@ -523,3 +523,20 @@ type func(type1 par1, type2 par2)
 		return returnValue;
 	}
 ```
+
+### Dichiarazione di una funzione
+La dichiarazione del _prototipo_ (o _signature_) di una funzione specifica **nome**, **tipo di valore** e **parametri** della funzione stessa.
+`type funcName(parameters);`
+Serve ad informare il compilatore che quella funzione sarà usata nel programma.
+La dichiarazione del prototipo deve _precedere_ il punto in cui la funzione viene richiamata. Abitualmente, le dichiarazioni vengono posizionate in cima al programma, _prima_ della funzione `main()`.
+
+### Definizione di una funzione
+La definizione specifica _sia il prototipo che la sequenza di istruzioni_ contenute nella funzione.
+```
+type funcName(parameters)
+	{
+		body
+	}
+```
+La funzione può essere definita ovunque nel programma. Se la definizione viene definita _prima_ del punto in cui la funzione viene richiamata per la prima volta, la dichiarazione **può essere omessa**.
+Per semplicità, si consiglia di utilizzare le dichiarazioni dei prototipi prima della funzione `main()` e definire le suddette funzioni _dopo_ alla funzione `main()`.
