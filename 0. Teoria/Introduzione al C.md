@@ -334,9 +334,9 @@ Consentono di costruire condizioni complesse a partire da condizioni più sempli
 * XOR (Binario)
 Possono essere definiti in maniera univoca con la **tavola della verità**:
 * **Operatori binari**
-![](Introduzione%20al%20C/image_2020-09-30_14-07-27%202.png)
+![](Introduzione%20al%20C/image_2020-09-30_14-07-27%203.png)
 * **Operatore unario NOT**
-![](Introduzione%20al%20C/image_2020-09-30_14-07-40%202.png)
+![](Introduzione%20al%20C/image_2020-09-30_14-07-40%203.png)
 
 Nel linguaggio C, la sintassi degli operatori logici è:
 ```
@@ -540,3 +540,29 @@ type funcName(parameters)
 ```
 La funzione può essere definita ovunque nel programma. Se la definizione viene definita _prima_ del punto in cui la funzione viene richiamata per la prima volta, la dichiarazione **può essere omessa**.
 Per semplicità, si consiglia di utilizzare le dichiarazioni dei prototipi prima della funzione `main()` e definire le suddette funzioni _dopo_ alla funzione `main()`.
+
+### Visibilità delle variabili - Scoping
+```
+void f(int p);
+
+float g;
+
+int main()
+{
+	int a;
+	for(a = 0; a < 5; a++)
+	{
+		int b;
+	}
+}
+
+void f(int p)
+{
+	int c;
+}
+```
+**In quali parti del programma sono visibili le variabili g, a, b, c e p?**
+Regole di **scoping** in C:
+* Ogni area racchiusa fra `{}` costituisce un **blocco**
+* Le variabili dichiarate all’interno di un blocco sono dette **locali** e sono visibili solo all’interno di quel blocco
+* Le variabili dichiarate all’esterno di tutti i blocchi, ossia dichiarate all’interno del **blocco globale**, sono dette variabili **globali** e sono visibili ovunque all’interno del programma
