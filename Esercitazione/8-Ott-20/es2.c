@@ -26,8 +26,9 @@ int main()
 
     do
     {
-        printf("Inserire due numeri tra 0 e 999");
-        scanf("%d %d", &a, &b);
+        printf("Inserire due numeri tra 0 e 999: ");
+        scanf("%d", &a);
+        scanf("%d", &b);
 
         if(a > b)
         {
@@ -41,7 +42,7 @@ int main()
     {
         if(is_armstrong(i))
         {
-            printf("\nIl numero %u è di Armstrong", i);
+            printf("\nIl numero %u è di Armstrong\n", i);
         }
     }
 
@@ -87,7 +88,7 @@ int is_armstrong(unsigned int a)
     for(pos = 1; pos <= potenza; pos++)
     {
         cifra = cifra_n(a, pos);
-        somma_cifre += pow(cifra, 3);
+        somma_cifre = somma_cifre + pow(cifra, 3);
     }
 
     return somma_cifre == a;
