@@ -21,7 +21,7 @@ double R(double b);
 
 double S(double x, double y);
 
-void main()
+int main()
 {
     double n, m, s;
 
