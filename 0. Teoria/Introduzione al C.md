@@ -334,9 +334,9 @@ Consentono di costruire condizioni complesse a partire da condizioni più sempli
 * XOR (Binario)
 Possono essere definiti in maniera univoca con la **tavola della verità**:
 * **Operatori binari**
-![](Introduzione%20al%20C/image_2020-09-30_14-07-27%203.png)
+![](Introduzione%20al%20C/image_2020-09-30_14-07-27%204.png)
 * **Operatore unario NOT**
-![](Introduzione%20al%20C/image_2020-09-30_14-07-40%203.png)
+![](Introduzione%20al%20C/image_2020-09-30_14-07-40%204.png)
 
 Nel linguaggio C, la sintassi degli operatori logici è:
 ```
@@ -566,3 +566,69 @@ Regole di **scoping** in C:
 * Ogni area racchiusa fra `{}` costituisce un **blocco**
 * Le variabili dichiarate all’interno di un blocco sono dette **locali** e sono visibili solo all’interno di quel blocco
 * Le variabili dichiarate all’esterno di tutti i blocchi, ossia dichiarate all’interno del **blocco globale**, sono dette variabili **globali** e sono visibili ovunque all’interno del programma
+* Se due variabili sono dichiarate con lo stesso nome ma in blocchi diversi, la regola generale è che la variabile locale **oscura** la variabile globale
+
+### Vita di una variabile
+* Le variabili locali vengono _create_ all’atto della loro dichiarazione dentro ad un blocco
+* Quando l’esecuzione del blocco è terminata, tutte le variabili locali di quel blocco vengono **distrutte**
+
+Esempio:
+```
+if(a != 0)
+{
+	int x;
+	scanf("%d%, &x);
+	x = x / a;
+} // Qui la variabile x viene distrutta
+
+printf("%d", x); // Errore
+```
+
+* Le variabili locali che sono dichiarate con la parola chiave `static` **mantengono il loro valore** tra l’esecuzione di un blocco ed il successivo
+* L’inizializzazione di una variabile `static` viene fatta, sempre e comunque, **una volta sola** nel programma.
+
+Esempio:
+```
+int ris, i;
+for(i = 0; i < 5; i++)
+{
+	static int s = 0;
+	s++;
+	ris = s;
+}
+printf("%d\n", ris); // Stampa i numeri da 1 a 5 correttamente
+```
+
+### Regole di Scoping e funzioni
+* I parametri formali sono a tutti gli effetti variabili locali di una funzione e perciò seguono le regole già viste
+* Le variabili globali sono visibili e **modificabili** all’interno di una funzione
+* Questo comporta la possibilità di creare _effetti indesiderati_ difficili da prevedere alla chiamata della funzione
+* È opportuno limitare l’uso di variabili globali per evitare problemi inaspettati
+* Viceversa, è meglio dichiarare statement `typedef` e funzioni nel blocco globale, per essere poi utilizzabili nell’intero programma
+
+## Dati strutturati in C
+### Array
+Offrono la possibilità di rappresentare in modo compatto una collezione di variabili.
+
+Sintassi:
+`float vendite[12]`
+
+* L’accesso ad un elemento avviene attraverso il nome dell’array seguito dalla posizione dell’elemento stesso fra parentesi quadre, il **subscript**
+* La posizione deve essere intera o compatibile e parte da 0, fino alla dimensione dell’array meno uno
+* Ogni singolo elemento dell’array è del tutto analogo ad una variabile di tipo semplice
+
+Esempio:
+```
+float vendite[12];
+float totale = 0;
+int i;
+
+for (i = 0; i < 12; i++)
+{
+	totale = totale + vendite[i];
+}
+
+scanf("%f",&vendite[0]);
+printf("\nLe vendite di Dicembre sono state: %f", vendite[11]);
+printf("\nL'incremento è pari a %f\n", (vendite[1] - vendite[0]) / vendite[0]);
+```
