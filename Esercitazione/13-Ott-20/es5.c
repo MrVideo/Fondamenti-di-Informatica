@@ -9,20 +9,26 @@ Bonus: Provare ad eseguire il programma con 547.35 come input e spiegare cosa su
 
 int main()
 {
-    float change;
-    int price, tmp, e50, e20, e5;
+    int price, e50, e20, e5;
 
     printf("Inserisci il prezzo: ");
     scanf("%d", &price);
 
     e50 = price / 50;
-    tmp = price - e50 * 50;
+    price = price - e50 * 50;
 
     e20 = price / 20;
-    tmp = price - e20 * 20;
+    price = price - e20 * 20;
 
     e5 = price / 5;
-    tmp = price - e5 * 5;
+    price = price - e5 * 5;
 
-    change = tmp;
+    printf("\nPer pagare serviranno:\n- %d banconote da 50\n- %d banconote da 20\n- %d banconote da 5\n", e50, e20, e5);
+
+    if(price > 0)
+    {
+        printf("Rimangono ancora %d Euro.\n", price);
+    }
+
+    return 0;
 }
