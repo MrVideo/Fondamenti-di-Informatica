@@ -334,9 +334,9 @@ Consentono di costruire condizioni complesse a partire da condizioni più sempli
 * XOR (Binario)
 Possono essere definiti in maniera univoca con la **tavola della verità**:
 * **Operatori binari**
-![](Introduzione%20al%20C/image_2020-09-30_14-07-27%204.png)
+![](Introduzione%20al%20C/image_2020-09-30_14-07-27%205.png)
 * **Operatore unario NOT**
-![](Introduzione%20al%20C/image_2020-09-30_14-07-40%204.png)
+![](Introduzione%20al%20C/image_2020-09-30_14-07-40%205.png)
 
 Nel linguaggio C, la sintassi degli operatori logici è:
 ```
@@ -607,7 +607,7 @@ printf("%d\n", ris); // Stampa i numeri da 1 a 5 correttamente
 * Viceversa, è meglio dichiarare statement `typedef` e funzioni nel blocco globale, per essere poi utilizzabili nell’intero programma
 
 ## Dati strutturati in C
-### Array
+## Array
 Offrono la possibilità di rappresentare in modo compatto una collezione di variabili.
 
 Sintassi:
@@ -632,3 +632,167 @@ scanf("%f",&vendite[0]);
 printf("\nLe vendite di Dicembre sono state: %f", vendite[11]);
 printf("\nL'incremento è pari a %f\n", (vendite[1] - vendite[0]) / vendite[0]);
 ```
+
+È possibile inizializzare un array in fase di dichiarazione così:
+`type name[N] = {val1, val2, ... ,valN};`
+
+Si può inizializzare a zero un array numerico nel seguente modo:
+`float v[100] = {0};`
+In questo caso, il primo elemento di v è 0, e tutti gli altri vengono portati ad un valore di default, che in questo caso è sempre 0.
+
+Nel caso `float v[100] = {4};`, avremo il primo elemento con valore 4, mentre gli altri verranno inizializzati a 0 di default.
+
+### Lettura e scrittura di un Array
+* La lettura e la scrittura avviene **un elemento alla volta**
+* È molto conveniente usare il **ciclo for** per riempire e leggere gli array
+Esempio:
+```
+int i;
+float prezzo[4];
+for(i = 0; i < 4; i++)
+{
+	scanf("%f", &prezzo[i]);
+}
+for(i = 0; i < 4; i++)
+{
+	printf("prezzo[%d] = %f", i, prezzo[i]);
+}
+```
+
+Esempio:
+```
+#include <stdio.h>
+
+int main()
+{
+	float vendite[6];
+	int i, j;
+
+	for(i = 0; i < 6; i++)
+	{
+		printf("Vendite di %d mese/i fa: ", i + 1);
+		scanf("%f", &vendite[i]);
+	}
+	for(i = 5; i >= 0; i--)
+	{
+		if(i < 0) printf("%d mesi fa ", i + 1);
+		else printf("1 mese fa: ");
+		for(j = 1; j < vendite[i]; j++)
+		{
+			printf("*");
+		}
+		printf("\n");
+	}
+	return 0;
+}
+```
+
+### Range
+In C è il programmatore a doversi preoccupare di non accedere a elementi dell’array non validi.
+```
+float prezzo[4];
+prezzo[4] = 42; //Non esiste un elemento 4 dell'array
+```
+
+### Subscript
+È possibile usare `enum` e `char` come subscript.
+Esempio:
+```
+typedef enum{gen, feb, mar, apr, mag, giu, lug, ago, set, ott, nov, dic} mese;
+float vendite [12];
+mese m;
+
+printf("Vendite di Aprile: %f\n", vendite[apr]);
+for(m = gen; m <= dic; m++)
+{
+	scanf("%f", &vendite[m]);
+}
+```
+
+Esempio:
+```
+float freq[26];
+
+printf("La frequenza della lettera f è: %f\n", freq['f' - 'a']);
+```
+
+### Copia e confronto di array
+La copia fra due array **non può essere fatta** tramite un semplice assegnamento:
+```
+int a[5] = {1, 2, 3, 4, 5}, b[5];
+b = a; //Errore, non funziona
+```
+È necessario copiare **un elemento per volta**:
+```
+for(i = 0; i < 5; i++)
+	b[i] = a[i];
+```
+Analogamente, non è possibile usare gli operatori di confronto con gli array, ma occorre effettuare il confronto un elemento per volta:
+```
+int a[5], b[5], i;
+a == b; //Errore di sintassi
+
+for(i = 0; i < 5; i++)
+{
+	a[i] == b[i]; //Un elemento per volta
+}
+```
+
+### Array e funzioni
+È possibile utilizzare gli array come parametri di una funzione in C, tuttavia:
+* Il passaggio dei parametri si basa sull’assegnamento e non è ammissibile effettuare un assegnamento fra array o fra array e variabili scalari
+* L’uso degli array come parametri di funzione richiede uno strumento aggiuntivo: **i puntatori**
+
+## Stringhe
+Gli array di tipo `char` sono anche detti _stringhe_. Dal momento che sono molto usati, il C mette a disposizione funzioni specifiche per questo tipo di dato.
+
+Esempio:
+```
+char nome[10];
+
+nome[0] = 'A';
+nome[1] = 'n';
+nome[2] = 'n';
+nome[3] = 'a';
+```
+Questo modo di assegnare i caratteri uno ad uno è poco efficiente. Un modo migliore sarebbe:
+```
+typedef char stringa[30];
+stringa messaggio;
+```
+In C, le costanti di tipo stringa si rappresentano come una sequenza di caratteri racchiusi tra `" "`. L’inizializzazione può avvenire in fase di dichiarazione:
+```
+typedef char stringa[30];
+stringa messagio = "prova";
+```
+
+La lettura e la scrittura di stringhe è particolarmente semplice:
+```
+char nome[30];
+
+printf("Inserisci il tuo nome: ");
+scanf("%s", nome); //Per la lettura delle stringhe non bisogna anteporre & al nome della stringa
+printf("Ciao %s!\n", nome);
+```
+Con `%s`, `scanf` legge una stringa fino al primo spazio. Per leggere stringhe che includono uno spazio si utilizza la stringa di formato `%[^\n]`
+```
+printf("Inserisci il tuo nome: ");
+scanf("%[^\n]", nome);
+```
+
+### Carattere terminatore
+In C esiste un carattere speciale che indica **la fine di una stringa**: `\0`. Questo carattere ha codice 0 nella tabella ASCII.
+Quando la funzione `printf` individua questo carattere speciale, **smette di stampare a video gli elementi della stringa**.
+Tutte le funzioni standard di libreria del C gestiscono autonomamente la posizione e l’individuazione del carattere `\n`. Nel caso però io voglia dichiarare ed inizializzare manualmente una stringa carattere per carattere, **devo aggiungere il carattere terminatore** alla fine della stringa.
+```
+char msg[30];
+msg[0] = 'A';
+msg[1] = 'B';
+msg[2] = '\0'; //Senza questa inizializzazione, printf stamperebbe anche altri caratteri non prevedibili fino a stampare tutto l'array msg
+printf("%s", msg);
+```
+
+### Copia e confronto di stringhe
+Le stringhe sono comunque array di `char`, perciò hanno le stesse limitazioni discusse per gli array. Tuttavia esistono due funzioni definite nella libreria `string.h` che facilitano le operazioni di copia e confronto.
+* Copia: `strcpy(s1, s2); //Copia s2 in s1`
+* Confronto: `strcmp(s1, s2); //Ritorna 0 se s1 è uguale a s2`
