@@ -1,6 +1,60 @@
 # Introduzione al C
 #informatica
 - - - -
+# Indice
+* [[/Primo programma in C]]
+* [[/Variabili]]
+* [[/Input da tastiera]]
+* [[/Tipi di dati]]
+	* [[/Tipo int]]
+	* [[/Tipo float]]
+	* [[/Tipo char]]
+	* [[/Tipo enum]]
+	* [[/Ridefinizione di tipo]]
+	* [[/Costanti]]
+	* [[/Conversioni di tipo]]
+	* [[/Funzione sizeof]]
+* [[/Istruzioni condizionali]]
+	* [[/If statement]]
+	* [[/Vero e falso in C]]
+	* [[/Operatori relazionali]]
+	* [[/Operatori logici]]
+	* [[/Ordine tra gli operatori]]
+	* [[/If - else statement]]
+	* [[/Statement composti]]
+	* [[/Switch statement]]
+* 	[[/Cicli]]
+	* [[/Ciclo for]] 
+	* [[/Ciclo while]]
+	* [[/Ciclo do-while]]
+	* [[/Istruzioni break e continue]]
+* [[/Funzioni in C]]
+	* [[/Funzioni senza parametri o ritorno]]
+	* [[/Funzioni con parametri]]
+	* [[/Funzioni con valori di ritorno]]
+	* [[/Dichiarazione di una funzione]]
+	* [[/Definizione di una funzione]]
+	* [[/Visibilità delle variabili - Scoping]]
+	* [[/Vita di una variabile]]
+	* [[/Regole di Scoping e funzioni]]
+* [[/Dati strutturati in C]]
+	* [[/Array]]
+		* [[/Lettura e scrittura di un Array]]
+		* [[/Range]]
+		* [[/Subscript]]
+		* [[/Copia e confronto di array]]
+		* [[/Array e funzioni]]
+	* [[/Stringhe]] 
+		* [[/Carattere terminatore]]
+		* [[/Copia e confronto di stringhe]]
+		* [[/Stringhe e funzioni]]
+	* 	[[/Matrici]]
+	* 	[[/Struct]]
+		* [[/Struct con nome e typedef]]
+		* [[/Array di struct]]
+		* [[/Assegnamento, confronto e funzioni con struct]]
+		* [[/Struct come campi]]
+- - - -
 ## Primo programma in C
 ```
 /* Commento
@@ -73,7 +127,7 @@ int main()
 * `double`: numeri a virgola mobile, doppia precisione (usa lo standard IEEE 754)
 * `char`: caratteri (1 byte, 0-255)
 
-### Tipo `int`
+### Tipo int
 Rappresenta i numeri interi e ne esistono di più tipi:
 * `short int` o `short`: numeri interi di piccole dimensioni
 * `long int` o `long`: numeri interi di grandi dimensioni
@@ -147,7 +201,7 @@ scanf("%ld",&l); // Long
 scanf("%lu",&ul); // Long unsigned 
 ```
 - - - -
-### Tipo `float`
+### Tipo float
 I due tipi di dati per numeri reali _built-in_ nel linguaggio C sono il `float` ed il `double`, che corrispondono a _single precision_ e _double precision_ nello standard IEEE 754-1985.
 La quantità di memoria usata per le variabili dipende dall’architettura del calcolatore usato.
 
@@ -191,7 +245,7 @@ Forma compatta:
 
 ```
 
-### Tipo `char`
+### Tipo char
 Viene rappresentato attraverso un solo byte e contiene la codifica numerica di un carattere, ossia un valore numerico nell’intervallo tra 0 e 255 compresi.
 
 ```
@@ -221,7 +275,7 @@ printf("\nIl carattere inserito è %c\n",c);
 printf("La sua codifica numerica è %d\n,c);
 ```
 
-### Tipo `enum`
+### Tipo enum
 Consente di elencare una sequenza di valori simbolici che la variabile può assumere. I valori vengono codificati come interi a partire da zero.
 
 Non è un vero e proprio tipo di dato nuovo perché utilizza interi, ma permette di dare nomi ai vari valori che posso voler assegnare in futuro alla mia variabile.
@@ -290,7 +344,7 @@ float y = x / 5;
 float y = ((float) x) / 5; // Cast corretto
 ```
 
-### Funzione `sizeof`
+### Funzione sizeof
 Con questa funzione si può trovare la dimensione di memoria allocata ad un tipo di variabile in byte.
 
 Sintassi: `sizeof(type)`
@@ -309,13 +363,13 @@ if(condition)
 ```
 Semantica: lo statement viene eseguito **solo se** la condizione è vera.
 
-#### Vero e falso in C
+### Vero e falso in C
 In C non c’è un tipo di dato specifico per rappresentare i concetti di vero e falso. Una condizione assume un valore intero pari a:
 * 0 se la condizione è falsa
 * 1 se la condizione è vera
 In generale, **ogni valore diverso da 0 è considerato vero**.
 
-#### Operatori relazionali
+### Operatori relazionali
 Operano su valori numerici e di carattere e possono essere espressioni aritmetiche, variabili o costanti.
 ```
 >  // Maggiore
@@ -326,7 +380,7 @@ Operano su valori numerici e di carattere e possono essere espressioni aritmetic
 != // Diverso
 ```
 
-### #Operatori logici
+### Operatori logici
 Consentono di costruire condizioni complesse a partire da condizioni più semplici e sono quattro:
 * AND (Binario)
 * OR (Binario)
@@ -334,9 +388,9 @@ Consentono di costruire condizioni complesse a partire da condizioni più sempli
 * XOR (Binario)
 Possono essere definiti in maniera univoca con la **tavola della verità**:
 * **Operatori binari**
-![](Introduzione%20al%20C/image_2020-09-30_14-07-27%205.png)
+![](Introduzione%20al%20C/image_2020-09-30_14-07-27.png)
 * **Operatore unario NOT**
-![](Introduzione%20al%20C/image_2020-09-30_14-07-40%205.png)
+![](Introduzione%20al%20C/image_2020-09-30_14-07-40.png)
 
 Nel linguaggio C, la sintassi degli operatori logici è:
 ```
@@ -345,7 +399,7 @@ condition || condition //OR
 !condition //NOT
 ```
 
-#### Ordine tra gli operatori
+### Ordine tra gli operatori
 Un’espressione viene valutata nel seguente ordine:
 1. Operatori `++` e `--`
 2. Operatore `!`
@@ -395,7 +449,7 @@ else
 	}
 ```
 
-### Esempio concreto
+Esempio concreto:
 ```
 #include <stdio.h>
 
@@ -457,7 +511,7 @@ switch (expression)
 ## Cicli
 Servono a ripetere le stesse istruzioni più volte.
 
-### Ciclo `for`
+### Ciclo for
 Sintassi:
 ```
 for( initialization ; condition ; update )
@@ -470,7 +524,7 @@ for( initialization ; condition ; update )
 	}
 ```
 
-### Ciclo `while`
+### Ciclo while
 Sintassi:
 ```
 while(condition)
@@ -488,12 +542,12 @@ do
 	} while (condition)
 ```
 
-### Istruzioni `break` e `continue`
+### Istruzioni break e continue
 * L’istruzione `break` interrompe l’esecuzione del ciclo
 * L’istruzione `continue` passa direttamente all’iterazione seguente
 
 ## Funzioni in C
-### Funzioni senza parametri o ritorno:
+### Funzioni senza parametri o ritorno
 ```
 void func()
 	{
@@ -503,7 +557,7 @@ void func()
 Richiamo della funzione:
 `func();`
 
-### Funzioni con parametri:
+### Funzioni con parametri
 ```
 void func(type1 par1, type2 par2) // Parametri formali
 	{
@@ -783,7 +837,7 @@ scanf("%[^\n]", nome);
 ### Carattere terminatore
 In C esiste un carattere speciale che indica **la fine di una stringa**: `\0`. Questo carattere ha codice 0 nella tabella ASCII.
 Quando la funzione `printf` individua questo carattere speciale, **smette di stampare a video gli elementi della stringa**.
-Tutte le funzioni standard di libreria del C gestiscono autonomamente la posizione e l’individuazione del carattere `\n`. Nel caso però io voglia dichiarare ed inizializzare manualmente una stringa carattere per carattere, **devo aggiungere il carattere terminatore** alla fine della stringa.
+Tutte le funzioni standard di libreria del C gestiscono autonomamente la posizione e l’individuazione del carattere `\0`. Nel caso però io voglia dichiarare ed inizializzare manualmente una stringa carattere per carattere, **devo aggiungere il carattere terminatore** alla fine della stringa.
 ```
 char msg[30];
 msg[0] = 'A';
@@ -791,8 +845,237 @@ msg[1] = 'B';
 msg[2] = '\0'; //Senza questa inizializzazione, printf stamperebbe anche altri caratteri non prevedibili fino a stampare tutto l'array msg
 printf("%s", msg);
 ```
+Spesso si tende ad aggiungere 1 alla dimensione dell’array stringa per lasciare spazio al carattere terminatore.
 
 ### Copia e confronto di stringhe
 Le stringhe sono comunque array di `char`, perciò hanno le stesse limitazioni discusse per gli array. Tuttavia esistono due funzioni definite nella libreria `string.h` che facilitano le operazioni di copia e confronto.
 * Copia: `strcpy(s1, s2); //Copia s2 in s1`
 * Confronto: `strcmp(s1, s2); //Ritorna 0 se s1 è uguale a s2`
+
+### Stringhe e funzioni
+È possibile utilizzare le stringhe come parametri di funzioni in C, ma poiché i parametri di una funzione si basano sull’assegnazione, servono i **puntatori** per utilizzare le stringhe come parametri.
+
+## Matrici
+Le matrici sono strutture dati bidimensionali e vengono rappresentati come _array di array_:
+```
+typedef int matrice[N][M];
+matrice a;
+
+float b[3][3];
+```
+Accesso ad un elemento:
+`b[1][0] = 30;`
+La lettura avviene **un elemento alla volta**, come per gli array:
+```
+float a[N][M];
+
+for(i = 0; i < N; i++)
+{
+	for(j = 0; j < M; j++)
+	{
+		scanf("%f", &a[i][j]);
+	}
+}
+```
+La scrittura delle matrici è identica:
+```
+float a[N][M];
+
+for(i = 0; i < N; i++)
+{
+	for(j = 0; j < M; j++)
+	{
+		printf("%f", &a[i][j]);
+	}
+}
+```
+La somma fra matrici funziona in modo analogo:
+```
+float a[N][M];
+float b[N][M];
+float sum[N][M];
+
+for(i = 0; i < N; i++)
+{
+	for(j = 0; j < M; j++)
+	{
+		sum[i][j] = a[i][j] + b[i][j];
+	}
+}
+```
+Inizializzazione manuale:
+```
+int a[2][3] = {{1, 2, 3}, {4, 5, 6}}, b[2][3];
+b = a; //Errore di sintassi
+```
+Analogamente agli array, non si possono utilizzare operatori di confronto con le matrici. I confronti vanno fatti **un elemento alla volta**.
+
+## Struct
+Devo rappresentare i libri in una biblioteca, utilizzando delle variabili:
+```
+int anno;
+int pagine;
+char autore[30];
+char titolo[100];
+```
+Se i libri fossero tanti, questo tipo di soluzione non sarebbe praticabile. Inoltre, queste variabili così impostate non sono in alcun modo collegate tra loro.
+
+Il problema si può affrontare usando le `struct`:
+```
+struct
+{
+	int anno; //Campi
+	int pagine;
+	char autore[30];
+	char titolo[100];
+} libro1, libro2; //Variabili
+```
+Rispetto agli array, gli elementi non sono numerati ma hanno un **nome** e **possono essere di tipi diversi**.
+Per accedere ad un campo di una struct si usa la sintassi `var.campo`.
+Esempio:
+```
+struct
+{
+	int anno; //Campi
+	int pagine;
+	char autore[30];
+	char titolo[100];
+} l, l2;
+
+l.anno = 1998; //Accesso al campo "anno" di "l"
+```
+La lettura di una struct avviene **campo per campo**:
+```
+printf("Inserire anno: ");
+scanf("%d", &l.anno);
+printf("Inserire numero pagine: ");
+scanf("%d", &l.pagine);
+printf("Inserire autore: ");
+scanf("%[^\n]", l.autore);
+printf("Inserire titolo: ");
+scanf("%[^\n]", l.titolo);
+```
+
+### Struct con nome e typedef
+Con nome:
+```
+struct libro
+{
+	int anno;
+	int pagine;
+	char autore[30];
+	char titolo[100];
+}
+
+struct libro l;
+```
+Solitamente in questo caso si pone la `struct` nel blocco globale per poter creare variabili della `struct` ovunque nel programma.
+
+Con `typedef`:
+```
+typedef struct
+{
+	int anno;
+	int pagine;
+	char autore[30];
+	char titolo[100];
+} libro;
+
+libro l;
+```
+
+### Array di struct
+È possibile dichiarare un array di struct. In questo modo è possibile gestire una sequenza di elementi ognuno dei quali rappresenta un dato strutturato.
+Esempio:
+```
+typedef struct
+{
+	int anno;
+	int pagine;
+	char autore[30];
+	char titolo[100];
+} libro;
+
+libro biblioteca[N];
+```
+
+Esempio: leggere i dati di una biblioteca e trovare il libro più vecchio.
+```
+#include <stdio.h>
+#define N 3
+
+typedef struct
+{
+	int anno;
+	int pagine;
+	char autore[30];
+	char titolo[100];
+} libro;
+
+int main()
+{
+	libro biblioteca[N];
+	int i, oldest;
+
+	for(i = 0; i < N; i++)
+	{
+		scanf("%d", &biblioteca[i].anno);
+		scanf("%d", &biblioteca[i].pagine);
+		scanf("%[^\n]", biblioteca[i].autore);
+		scanf("%[^\n]", biblioteca[i].titolo);
+	}
+	
+	oldest = 0;
+	for(i = 1; i < N; i++)
+	{
+		if(biblioteca[i].anno < biblioteca[oldest].anno)
+		{
+			vecchio = i;
+		}
+	}
+
+	printf("Dati libro più vecchio\n");
+	printf("Anno: %d\n", biblioteca[oldest].anno);
+	printf("Numero pagine: %d\n", biblioteca[oldest].pagine);
+	printf("Autore: %s\n", biblioteca[oldest].autore);
+	printf("Titolo: %s\n", biblioteca[oldest].titolo);
+
+	return 0;
+}
+```
+
+### Assegnamento, confronto e funzioni con struct
+Il C **permette di effettuare assegnamento fra struct** senza dover considerare un elemento alla volta:
+```
+libro l1, l2;
+l1 = l2;
+```
+Non è invece possibile effettuare confronti fra struct ma occorre considerare **un campo per volta**:
+```
+if(l1 == l2) //Errore di sintassi
+```
+Le struct **possono essere usate come parametri e valori di ritorno** delle funzioni senza particolari accorgimenti:
+```
+void f(libro l);
+```
+
+### Struct come campi
+```
+typedef struct
+{
+	int anno;
+	int pagine;
+} edizione;
+
+typedef struct
+{
+	char autore[30];
+	char titolo[100];
+	char editore[100];
+	edizione edizioni[10];
+	int edizioni;
+} libro;
+
+libro l;
+//l.edizioni[0].anno è la sintassi per accedere al campo edizioni e quindi alla struct edizione
+```
