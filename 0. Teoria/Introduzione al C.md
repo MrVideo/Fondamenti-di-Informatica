@@ -1079,3 +1079,96 @@ typedef struct
 libro l;
 //l.edizioni[0].anno è la sintassi per accedere al campo edizioni e quindi alla struct edizione
 ```
+
+## Programmazione ricorsiva
+La **ricorsione** si ha quando una funzione **richiama se stessa** (ricorsione _diretta_) oppure **un’altra funzione** (ricorsione _indiretta_).
+È una tecnica di programmazione molto potente che permette di risolvere in maniera elegante problemi complessi.
+Per risolvere un problema con la programmazione ricorsiva sono necessari alcuni elementi:
+* **Caso base**: caso _elementare_ del problema che può essere immediatamente risolto
+* **Passo ricorsivo**: chiamata ricorsiva per risolvere uno o più problemi più semplici
+* **Costruzione della soluzione**: costruzione della soluzione sulla base del risultato delle chiamate ricorsive
+
+Esempio: **Calcolo del fattoriale**
+* **Definizione**: `f(n) = n! = n * (n - 1) * (n - 2) * … * 3 * 2 * 1`
+* **Passo ricorsivo**: `f(n) = n * f(n - 1)`
+* **Caso base**: `f(0) = 1`
+* **Risoluzione**:
+```
+int factRic(int n)
+{
+	if(n == 0)
+		return 1; //Caso base
+	else
+		return n * factRic(n - 1); //Passo ricorsivo
+}
+```
+
+Esempio: **Sequenza di Fibonacci**
+È una sequenza di numeri interi in cui ogni numero si ottiene sommando i due precedenti nella sequenza. I primi due numeri sono per definizione 1.
+* **Caso base**: `f1 = 1`, `f2 = 1`
+* **Passo ricorsivo**: `fn = fn-1 + fn-2`
+* **Risoluzione**:
+```
+int fiboRic(int n)
+{
+	if(n == 1 || n == 2)
+		return 1;
+	else
+		return fiboRic(n - 2) + fiboRic(n - 1);
+}
+```
+
+Esempio: **Massimo Comune Divisore**
+Algoritmo di Euclide:
+* **Caso base**: se `m = n`, `MCD(m, n) = m`
+* **Caso ricorsivo**: se `m > n`, `MCD(m, n) = MCD(m - n, n)`
+* **Caso ricorsivo**: se `m < n`, `MCD(m, n) = MCD(m, n - m)`
+* **Risoluzione**:
+```
+int MCDEuclidRic(int m, int n)
+{
+	if(m == n)
+		return m;
+	else if (m > n)
+		return MCDEuclidRic(m - n, n);
+	else
+		return MCDEuclidRic(m, n - m);
+}
+```
+
+### Problemi nell’uso della ricorsione
+1. Errori nella ricorsione
+Deve essere presente un caso base _sempre raggiungibile_.
+Esempi:
+* Loop infinito (argomento decrescente)
+```
+int factRic(int n)
+{
+	return n * factRic(n - 1); //Non c'è il caso base
+}
+```
+* Loop infinito (chiamate identiche)
+```
+int factRic(int n)
+{
+	if(n == 0)
+		return 1;
+	else return factRic(n); //Manca il passo ricorsivo
+}
+```
+2. Uso della memoria
+La programmazione ricorsiva comporta spesso un uso inefficiente della memoria per la gestione degli spazi di lavoro delle chiamate generate. In alcuni casi viene comunque preferita ad altri approcci per la sua eleganza e semplicità. In altri casi, si può ricorrere ad implementazioni iterative.
+* **Esempio**: funzione iterativa che calcola il numero n di Fibonacci:
+```
+int fibList(int n)
+{
+	int f1 = 1, f2 = 1, tmp, i;
+	for(i = 3; i <= n; i++)
+	{
+		tmp = f2;
+		f2 = f1 + f2;
+		f1 = tmp;
+	}
+	return f2;
+}
+```
