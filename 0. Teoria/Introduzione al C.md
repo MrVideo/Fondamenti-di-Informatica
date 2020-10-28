@@ -54,6 +54,18 @@
 		* [[/Array di struct]]
 		* [[/Assegnamento, confronto e funzioni con struct]]
 		* [[/Struct come campi]]
+	* [[/Programmazione ricorsiva]]
+		* [[/Problemi nell’uso della ricorsione]]
+	* [[/Puntatori]]
+		* [[/Un modello “concettuale” della memoria]]
+		*  [[/Variabili e memoria]]
+		* [[/Cos’è un puntatore?]]
+		* [[/Operatore &]]
+		* [[/La funzione scanf]]
+		* [[/Dereferenziazione di un puntatore]]
+		* [[/Operazioni sui puntatori]]
+		* [[/Aritmetica dei puntatori]]
+		* [[/Funzione sizeof e dimensioni di memoria]]
 - - - -
 ## Primo programma in C
 ```
@@ -1172,3 +1184,84 @@ int fibList(int n)
 	return f2;
 }
 ```
+
+## Puntatori
+Sono uno strumento che serve a gestire la memoria del calcolatore in maniera più approfondita. Per comprenderli bisogna capire meglio come funzioni la memoria di un calcolatore.
+### Un modello “concettuale” della memoria
+La memoria può essere rappresentata da una tabella con tante righe, le **celle di memoria**, di dimensione 8 bit, ognuna delle quali ha un **indirizzo** che la identifica, anch’esso rappresentato con dei bit.
+Quando il calcolatore deve scrivere sulla memoria, dovrà scegliere un indirizzo di memoria in cui scrivere e poi memorizzare l’indirizzo per tornare a leggere quella cella.
+Si possono fare delle stime su quanta memoria possa servire ad un programma. Se in ogni cella abbiamo un byte ed ho a disposizione 32 bit per rappresentare un indirizzo, allora abbiamo 2^32 byte di memoria a disposizione (circa 4 Gigabyte).
+Non si può effettuare una scelta di quanti bit utilizzare computer per computer poiché è necessario che il programma che creo **funzioni a prescindere dal calcolatore**. Perciò la quantità di bit si sceglie a livello di **sistema operativo**: lo standard precedente era 32 bit, ora 64 bit.
+### Variabili e memoria
+Nella memoria entra tutto ciò che riguarda il nostro programma, in particolare le **variabili**. Non è compito nostro inserire una variabile nella memoria, noi ci limitiamo a darle un nome. Sono il compilatore ed il sistema operativo che decidono dove porre una variabile nella memoria. Con i puntatori, noi non possiamo scegliere l’indirizzo delle variabili ma potremo usare l’indirizzo di una variabile per **accedervi**.
+Una cella di memoria ha dimensione 8 bit, ma esistono variabili, come abbiamo visto, che occupano più di 8 bit, come un float (che ne occupa 32). Il compilatore allora sceglie un indirizzo di memoria di partenza e riserverà **tutti gli indirizzi sequenziali necessari** ad ospitare quella variabile.
+### Cos’è un puntatore?
+Un puntatore è un tipo di dato che viene usato in C per dichiarare una variabile che deve contenere un **indirizzo di cella di memoria**.
+In gergo, si dice che la variabile _punta_ alla cella di memoria, il cui indirizzo è contenuto nella variabile puntatore.
+Quando viene dichiarata una variabile puntatore, è necessario anche specificare il tipo di dato contenuto nelle celle di memoria che verranno _puntate_ alla variabile.
+Sintassi: `type *name;`
+### Operatore &
+Come si assegna un indirizzo di memoria di una variabile ad un puntatore?
+```
+float var;
+float *p;
+
+var = 3.4;
+p = &var; //&: “Indirizzo di...” - p “punta a” var
+```
+`&` è un operatore un’aria e restituisce l’indirizzo di memoria di una variabile qualunque.
+### La funzione scanf
+La funzione scanf ha come parametri la stringa di controllo e l’**indirizzo della variabile** in cui deve essere memorizzato il valore letto da tastiera.
+### Dereferenziazione di un puntatore
+Come accedere al **contenuto** della cella di memoria puntata dal puntatore:
+```
+float var1, var2;
+float *p;
+
+var1 = 3.4;
+p = &var1;
+var2 = *p; //p: indirizzo - *p: contenuto all’indirizzo p
+*p = 5.1; //Modifico il contenuto di var1
+```
+### Operazioni sui puntatori
+* Inizializzazione: `float *p = NULL;`
+* Assegnamento fra puntatori:
+```
+float a = 3.4;
+float *p1 = NULL, *p2 = NULL; //Non puntano a niente
+p1 = &a; //p1 punta ad a ora
+p2 = p1; //p2 punta anch’esso ad a
+```
+* Assegnamento per dereferenziazione:
+```
+float a = 3.4, b;
+float *p1 = NULL, *p2 = NULL;
+p1 = &a; //p1 punta ad a
+p2 = &b; //p2 punta a b
+*p2 = *p1; //b = a;
+```
+### Aritmetica dei puntatori
+Il C consente di effettuare somme e sottrazioni sui puntatori:
+```
+float *p;
+float a;
+p = &a;
+
+*(p + 1) = 4.5; //p + 1 != x + 1
+
+/* p + 1 = x + (1 * dim),
+dove dim è la dimensione in memoria del tipo associato al puntatore. Poiché p è un puntatore float, allora: dim = 4, perciò:
+p + 1 = x + 4 */
+
+p = p + 2; //x + 8
+```
+Sintassi: `puntatore = puntatore + x`
+Semantica:
+* Incrementa o decremento l’indirizzo contenuti nel puntatore di x **posizioni**
+* La dimensione di ogni posizione dipende dal tipo di puntatore
+### Funzione sizeof e dimensioni di memoria
+Sintassi: `sizeof(arg)`
+Se `arg` è:
+* Un **tipo di dato**: ritorna la quantità di memoria in byte necessaria per rappresentare un valore di quel tipo
+* Una **variabile scalare**: ritorna la quantità di memoria in byte occupata da quella variabile
+* Un **array**: ritorna la quantità di memoria in byte occupata dall’intero array
