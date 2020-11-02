@@ -66,6 +66,11 @@
 		* [[/Operazioni sui puntatori]]
 		* [[/Aritmetica dei puntatori]]
 		* [[/Funzione sizeof e dimensioni di memoria]]
+		* [[/Puntatori a struct]]
+		* [[/Array e puntatori]]
+			* [[/Gli array nella memoria centrale]]
+			* [[/Usare gli array come puntatori]]
+		* 	[[/Funzioni e puntatori]]
 - - - -
 ## Primo programma in C
 ```
@@ -1265,3 +1270,224 @@ Se `arg` è:
 * Un **tipo di dato**: ritorna la quantità di memoria in byte necessaria per rappresentare un valore di quel tipo
 * Una **variabile scalare**: ritorna la quantità di memoria in byte occupata da quella variabile
 * Un **array**: ritorna la quantità di memoria in byte occupata dall’intero array
+### Puntatori a struct
+L’espressione `(*p).campo` ha la stessa funzione dell’espressione `p->campo`
+Esempio:
+```
+typedef struct
+{
+	float x, y;
+} punto;
+
+punto p1, p2, *pp = NULL;
+
+p1.x = 4.5;
+
+pp = &p1;
+
+(*pp).x = 3.2; //Equivale a scrivere p1.x = 3.2;
+pp->x = 3.2; //Equivale alla scrittura sopra
+
+/*
+(p1.x = 3.2;) == ((*pp).x = 3.2;) == (pp->x = 3.2;)
+*/
+```
+## Array e puntatori
+### Gli array nella memoria centrale
+Un array viene memorizzato come un _blocco contiguo_ a partire da un indirizzo di partenza: l’**indirizzo base**. Il nome della variabile array (senza le parentesi quadre per la posizione) equivale all’indirizzo di partenza, ossia l’indirizzo del primo elemento dell’array.
+Esempio:
+```
+float a[3] = {1.0, 2.1, 3.2}
+
+float p = a; //Indirizzo base dell’array a in p
+/*
+(p = a) == (p = &a[0])
+*/
+```
+### Usare gli array come puntatori
+È possibile accedere ad un array attraverso i puntatori:
+```
+float a[5];
+int i;
+
+for(i = 0; i < 5; i++)
+{
+	scanf(“%f”, a + i);
+}
+```
+Più in generale, se `a` è una variabile di tipo array, l’espressione `a[i]` è uguale all’espressione `*(a+i)`.
+**Dimensione ed offset di un array**:
+```
+float a[5];
+float *p = &a[3];
+
+printf(“dimensione a: %lu\n”, sizeof(a) / sizeof(float)); //Stampa 5
+printf(“posizione p: %lu\n”, p - a); //Stampa 3
+```
+Abbiamo già visto scrivere `a` all’interno di un’istruzione: significa scrivere un indirizzo di memoria: l’indirizzo base dell’array `a`. Tuttavia `a` e `p` **non sono la stessa cosa**: `a` è un valore puntatore **costante**. Si può assegnare un valore a `p` perché è una **variabile**, ma non posso fare ciò con `a`. Posso scrivere `a` al posto di `p` in tutte le istruzioni che **non modificano** il valore di `p`, ma che lo utilizzano soltanto.
+Ecco perché:
+* Non è possibile usare l’operatore `=` per copiare il contenuto di un array o una stringa
+* Non si usa `&` per leggere una stringa: il nome della variabile è già il suo indirizzo
+* Non si può usare l’operatore `==` per confrontare due array o due stringhe
+## Funzioni e puntatori
+### Puntatori come parametri
+In C, i parametri di una funzione possono essere dei puntatori:
+```
+void fun(float *a)
+{
+	a++;
+}
+
+int main()
+{
+	float f = 3.4, *p;
+	p = &f;
+
+	fun(p);
+
+	return 0;
+}
+```
+Risultato: `p` continua a puntare ad `f`, mentre `a` punta a `f + 1`, ma poiché quando la funzione `fun(float *a)` termina, la variabile puntatore `*a` viene eliminata, le variabili `p` ed `f` non hanno nessuna modifica.
+**Attenzione**:
+```
+void fun(float *a)
+{
+	*a = 0;
+}
+
+int main()
+{
+	float f = 3.4, *p;
+	p = &f;
+	
+	fun(p);
+	
+	return 0;
+}
+```
+In questo caso, la dereferenziazione fa sì che la variabile a cui punta `p` diventi 0.
+Ecco perché si parla, un po’ impropriamente, di passaggio di indirizzo e per valore:
+```
+void fun(float *a)
+{
+	*a = 0;
+}
+
+int main()
+{
+	float f = 3.4;
+	
+	fun(&f); //Posso solo cambiare il valore di f, non il suo indirizzo
+	
+	return 0;
+}
+```
+In C, ci sono diverse notazioni che si possono usare per dichiarare un parametro di tipo array:
+* `void f(float a[DIM]);`
+* `void f(float a[]);`
+* `void f(float *a);`
+La differenza è solo estetica: tutte e tre le varianti sono funzionalmente equivalenti.
+Esempio:
+```
+/* Si può anche scrivere:
+int sum(int vettore[], int n)
+int sum(int vettore[5], int n) (il subscript viene ignorato)
+Entrambe vengono tradotte nella forma sottostante
+*/
+
+int sum(int *v, int n)
+{
+	int somma = 0, i;
+
+	for(i = 0; i < n; i++)
+		somma += vettore[i]; //vettore[i] == *(vettore + i)
+	
+	return somma;
+}
+
+int main()
+{
+	int a[5] = {0, 1, 2, 3, 4}, somma;
+
+	somma = sum(a, 5)
+}
+```
+## Gestione dei file in C
+### Memoria di massa e memoria centrale
+La memoria di massa è un dispositivo di memorizzazione generalmente presente in un calcolatore. Si differenzia dalla memoria centrale per dimensioni, costo, persistenza e prestazioni. I **file** sono lo strumento che consente di memorizzare delle informazioni nella memoria di massa del calcolatore.
+### File come flussi
+Un flusso (_stream_) di dati è un meccanismo i cui principali usi sono:
+* Lo scambio di dati con le periferiche
+* **Lettura e scrittura** dei dati memorizzati sul disco fisso
+In C i file sono quindi rappresentati come flussi e vengono fornite diverse funzionalità nella libreria `stdio.h` per la loro gestione:
+* Il flusso di informazione può essere testuale (flusso di caratteri) o binario (flusso di byte)
+* Consente di avere file ad _accesso sequenziale_ e ad _accesso diretto_ (o _casuale_)
+### Apertura e chiusura di un file
+Per poter utilizzare un file in un programma C è prima necessario _aprirlo_:
+```
+FILE *fopen(filename, mode)
+```
+* `filename` è il nome del file da aprire, incluso il path
+* `mode` è una stringa che serve a specificare come verrà utilizzato il file
+* La funzione ritorna un puntatore di tipo `FILE`, una particolare struttura dati che consente di tenere traccia dell’ultima posizione letta e scritta nel file, del suo stato, ecc. Se l’operazione non ha successo, viene ritornato il valore `NULL`.
+**Modalità di apertura di un file**
+* `r`: Apre un file testuale in lettura
+* `w`: Crea un file testuale in scrittura
+* `a`: Apre o crea un file testuale e si posiziona alla fine del file
+* `rb`: Apre un file binario in lettura
+* `wb`: Crea un file binario in lettura
+* `ab`: Apre o crea un file binario e si posiziona alla fine del file
+* `r+`: Apre un file testuale in lettura e scrittura
+* `w+`: Crea un file testuale in lettura e scrittura
+* `rb+`: Apre un file binario in lettura e scrittura
+* `wb+`: Crea un file binario in lettura e scrittura
+Una volta utilizzato un file in un programma, è necessario chiuderlo:
+```
+int fclose(FILE *fp)
+```
+`fp` è il puntatore al file da chiudere.
+La funzione ritorna 0 se l’operazione viene eseguita correttamente, altrimenti restituisce un valore speciale `EOF` definito in `stdio.h`, che viene generalmente utilizzato come carattere terminatore di un file.
+### Operazioni di lettura e scrittura
+Le operazioni di lettura e scrittura possono essere effettuate in quattro modi diversi:
+* Precisando il formato dei dati in ingresso ed in uscita
+* Accedendo ai dati carattere per carattere
+* Linea per linea
+* Blocco per blocco
+Generalmente si adotta l’accesso linea per linea nel caso di flussi di testo e l’accesso carattere per carattere o blocco per blocco in presenza di flussi binari.
+#### Lettura e scrittura formattata
+Le funzioni `fprintf` e `fscanf` consentono operazioni formattate analoghe a quelle di `scanf` e `printf`. Restituiscono il numero degli elementi effettivamente letti o stampati o restituiscono un numero negativo in caso di errore.
+Sintassi:
+```
+int fprintf(fp, ctrl_str, ...)
+int fscanf(fp, ctrl_str, ...)
+```
+`fp` è il puntatore al file dal quale leggere o dove scrivere, gli argomenti successivi sono analoghi a quelli usati con `printf` e `scanf`.
+#### Lettura e scrittura di un carattere
+* Lettura: `int fgetc(FILE *fp)`
+	* Riceve come argomento il file da cui leggere
+	* Restituisce il codice del carattere letto o `EOF` in caso di errore
+* Scrittura: `int fputc(int c, FILE *fp)`
+	* Riceve come argomenti il codice del carattere da scrivere ed il file su cui scrivere
+	* Restituisce il codice del carattere scritto o `EOF` in caso di errore
+#### Lettura e scrittura di stringhe
+* Lettura: `char *fgets (char *s, int n, FILE *fp)`
+	* Legge dal file puntato da `fp` fino a n - 1 caratteri (si interrompe nel caso raggiunga prima il carattere `\n` o la fine del file) e mette i caratteri letti nella stringa s (aggiungendo il carattere terminatore `\0`)
+	* La funzione restituisce l’indirizzo di `s` se ha successo o `NULL` in caso di errore
+* Scrittura: `int fputs (char *s, FILE *fp)`
+	* Scrive nel file puntato da `fp` il contenuto della stringa `s` (fino a raggiungere il carattere terminatore `\0`);
+	* restituisce 0 in caso l’operazione abbia avuto successo
+#### Operazione di gestione degli errori
+* `int ferror(FILE *fp)`
+	* Controlla se è stato commesso un errore nella precedente operazione di lettura o scrittura
+	* Restituisce 0 se nessun errore è stato commesso, un valore diverso da 0 in caso contrario
+* `int feof(FILE *fp)`
+	* Controlla se è stata raggiunta la fine del file nella precedente operazione di lettura o scrittura
+	* Restituisce 0 se la condizione di fine file non è stata raggiunga, un valore diverso da 0 in caso contrario
+#### Lettura e scrittura per blocchi
+* Lettura: `int fread(ptr, dim, num, FILE *fp)`
+	* Legge al più `num * dim` byte di dati binari o testuali dal file cui fa riferimento `fp` e li memorizza nel vettore identificato da `ptr` (la lettura termina prima se viene raggiunta la fine del file o si verifica un errore)
+	* La funzione ritorna il numero di elementi effettivamente letti
+* Scrittura: `int fwrite(ptr, dim, num, FILE *fp)` 
+	* Scrive `num * dim` byte di dati binari o testuali sul file cui fa riferimento `fp` prelevandoli dal vettore identificato da `ptr`
+	* La funzione ritorna il numero di elementi effettivamente scritti
