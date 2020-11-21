@@ -46,7 +46,7 @@ int main()
     } while(!chk);
 
     printf("\nIl risultato è %d", r);
-    printf("\nIl risultato verrà salvato nel file result.txt\n");
+    printf("\nIl risultato verrà salvato nel file result-log.txt\n");
 
     time(&rawtime);
     timeinfo = localtime(&rawtime);

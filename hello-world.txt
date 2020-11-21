@@ -1,5 +1,0 @@
-Hello, world!
-Mon Nov  2 09:47:15 2020
- - Result: 7
-Mon Nov  2 09:48:30 2020
-Result: 7
