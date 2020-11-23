@@ -1234,7 +1234,7 @@ float *p;
 var = 3.4;
 p = &var; //&: “Indirizzo di...” - p “punta a” var
 ```
-`&` è un operatore un’aria e restituisce l’indirizzo di memoria di una variabile qualunque.
+`&` è un operatore unario e restituisce l’indirizzo di memoria di una variabile qualunque.
 
 ### La funzione scanf
 La funzione scanf ha come parametri la stringa di controllo e l’**indirizzo della variabile** in cui deve essere memorizzato il valore letto da tastiera.
@@ -1982,3 +1982,81 @@ In C, si utilizzano gli _header file_ `.h` per definire le interfacce, principal
 * dichiarazione di tipo e variabili
 * dichiarazione di funzione
 Le implementazioni vengono invece incluse in corrispondenti
+
+## Sistemi operativi
+Il sistema operativo è un software importante poiché ha lo scopo di nascondere agli utenti ed ai programmatori tutto ciò che ha a che fare con la gestione dell’hardware presente nel calcolatore.
+
+### Architettura del sistema operativo
+Il sistema operativo è tipicamente organizzato a _strati_:
+1. Programmi utente
+2. Interprete comandi
+3. File system
+4. Gestione delle periferiche
+5. Gestione della memoria
+6. Gestione dei processi
+7. Macchina fisica
+Gestione dei processi, della memoria e delle periferiche sono _indispensabili_ per il funzionamento del sistema operativo: ne costituiscono il **kernel** (_nucleo_).
+
+### Tipi di sistema operativo
+Esistono diversi tipi di sistema operativo, ma in generale si possono dividere in:
+* **Monoutente e monoprogrammato**
+	* Esecuzione di un solo programma alla volta
+	* Utilizzato da un solo utente per volta
+	* Esempio: DOS, prime versioni di iOS (iPhoneOS)
+* **Monoutente e multiprogrammato**
+	* Esecuzione di più programmi alla volta (_multitasking_)
+	* Utilizzato da un solo utente per volta
+	* Esempio: Windows 95
+* **Multiutente e multiprogrammato**
+	* Multitasking
+	* Più utenti per volta
+	* Esempi: Linux, UNIX, sistemi operativi moderni
+Non possono esistere sistemi operativi multiutente e monoprogrammati poiché essere multiutente significa poter gestire istanze multiple di uno stesso programma.
+
+### Gestione dei processi nel sistema operativo
+Un processo non è esattamente un programma: un programma è del codice che è stato compilato o interpretato che svolge una certa funzione. Nel momento dell’esecuzione del programma, l’istanza del programma in esecuzione in quel momento è detta **processo** e si distingue poiché si può avere in esecuzione sulla propria macchina più processi dello stesso programma, che lavorano con dati diversi, si trovano in stati diversi.
+Il sistema operativo deve essere in grado di gestire l’esecuzione dei processi dei programmi utente. Deve poter distribuire le risorse del sistema ai vari processi equamente ed evitare conflitti e perciò ad ogni programma viene affidata una **macchina virtuale** realizzata dal sistema operativo che ne consente l’esecuzione come se la CPU del calcolatore fosse interamente dedicata a quel processo.
+Il modo in cui le risorse vengono gestite dal sistema operativo cambia a seconda della risorsa:
+* Alcune sono **indivisibili**, come i dispositivi di I/O, di rete, CPU
+* Alcune sono **divisibili**, come la RAM o l’Hard Disk
+
+### Stato di un processo
+Lo stato del processo può essere distinto fra stato **interno** ed **esterno**.
+Lo stato interno indica:
+* La prossima istruzione del programma che deve essere eseguita
+* I valori delle variabili e dei registri utilizzati dal processo
+Lo stato esterno indica:
+* Se il processo è in attesa di un evento (lettura dal disco, inserimento di dati da tastiera…)
+* Se il processo è in esecuzione
+* Se il processo è pronto all’esecuzione e quindi attende di accedere alla CPU
+
+I processi appena creati sono messi in stato di _pronto_, il kernel decide quale processo pronto mettere in esecuzione. Il kernel assegna il processore ad un processo per un quanto di tempo.
+* Coda dei processi pronti
+* Round-robin
+* Priorità dei processi
+
+_Pre-emption_: quando il quanto di tempo è scaduto, il kernel interrompe il processo in esecuzione.
+
+### Processi e sistema operativo
+Anche il sistema operativo è implementato tramite processi. Il sistema operativo garantisce che i conflitti tra i processi sono controllati e gestiti correttamente, e perciò viene eseguito in modalità privilegiata (_kernel mode_ o _supervisor_), così da poter controllare gli altri processi eseguiti in modalità user.
+
+### Chiamate al supervisor
+I processi utente per eseguire operazioni privilegiate invocano il supervisor tramite chiamate di sistema.
+Perché usare la modalità privilegiata?
+* Le operazioni di I/O sono operazioni riservate
+	* Un processo non deve poter andare a scrivere messaggi su un terminale non associato allo stesso processo
+* Un processo non deve poter sconfinare al di fuori di uno spazio di memoria
+* La condivisione di risorse dev’essere tale da cautelare i dati di ogni utente
+
+### Gestione del quanto di tempo
+Il quanto di tempo è gestito da una particolare interruzione, generata dall’orologio di sistema a una frequenza definita.
+
+### Gestione della memoria nel sistema operativo
+La gestione concorrente di molti programmi applicativi comporta la presenza di molti programmi nella RAM. Il sistema operativo offre ad ogni programma la visione di una memoria virtuale, che può avere dimensioni maggiori di quella fisica. Per gestire la memoria virtuale, il sistema operativo dispone di diversi meccanismi:
+* Rilocazione
+* 
+* Segmentazione
+
+#### Rilocazione
+ Il programma non ha accesso alla memoria fisica ma solo alla memoria virtuale, che appare al programma della dimensione totale della memoria installata nel sistema (o anche maggiore). Il programma può riempire la memoria virtuale a partire dall’indirizzo 0. Attraverso la _rilocazione_, dopo aver calcolato con la compilazione quanta memoria sarà usata, il kernel trova una sezione di memoria fisica libera di quella quantità e segna l’indirizzo iniziale di questa porzione nel _registro base_. Ogni volta che il programma prova ad accedere all’indirizzo 0, il kernel lo _reindirizzerà_ al vero indirizzo attraverso la somma di un offset.
+Questo approccio causa un problema di frammentazione, risolvibile con la paginazione, ossia la divisione della memoria in parti più piccole.
