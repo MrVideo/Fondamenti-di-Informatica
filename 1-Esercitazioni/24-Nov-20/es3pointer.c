@@ -8,9 +8,9 @@ void stringReverse(char *string);
 
 int main()
 {
-    system("CLS");
+    system("clear");
 
-    char string[DIM];
+    char string[DIM], i;
 
     printf("Inserisci una stringa: ");
     scanf("%s", string);
@@ -20,8 +20,6 @@ int main()
     stringReverse(string);
 
     printf("\n");
-
-    system("PAUSE");
     
     return 0;
 }
@@ -30,7 +28,7 @@ void stringReverse(char *string)
 {
     int i;
 
-    for(i = strlen(string); i <= 0; i--)
+    for(i = strlen(string); i >= 0; i--)
     {
         printf("%c", *(string + i));
     }
