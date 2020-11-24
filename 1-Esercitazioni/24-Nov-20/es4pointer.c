@@ -6,20 +6,27 @@
 
 #define DIM 10
 
-int binary_search(int v[], int elem, int a, int b);
+int binary_search(int *p, int elem, int a, int b);
 
 int main()
 {
-    int v[DIM], toSearch, start, end, i, found;
+    int v[DIM], toSearch, start, end, i, found, *p;
 
     srand(time(NULL));
 
     for(i = 0; i < DIM; i++)
         v[i] = rand()%10;
 
-    system("CLS");
+    system("clear");
 
-    printf("Inserisci l'elemento da cercare: ");
+    p = &v[0];
+
+    printf("L'array è:\n");
+
+    for(i = 0; i < DIM; i++)
+        printf("%d ", v[i]);
+
+    printf("\nInserisci l'elemento da cercare: ");
     scanf("%d", &toSearch);
 
     printf("\nInserisci la posizione di ricerca iniziale: ");
@@ -27,34 +34,32 @@ int main()
     printf("\nInserisci la posizione di ricerca finale: ");
     scanf("%d", &end);
 
-    found = binary_search(&v[0], toSearch, start, end);
+    found = binary_search(p, toSearch, start, end);
 
     if(found == -1)
         printf("\nL'elemento non è stato trovato.\n");
     else
         printf("\nL'elemento è stato trovato in posizione %d.\n", found);
-
-    system("PAUSE");
         
     return 0;
 }
 
-int binary_search(int v[DIM], int elem, int a, int b)
+int binary_search(int *p, int elem, int a, int b)
 {
     if(a == b)
     {
-        if(v[a] == elem)
+        if(*(p + a) == elem)
             return a;
         else
             return -1;
     }
     else
     {
-        if(v[a] == elem)
+        if(*(p + a) == elem)
             return a;
-        else if(v[b] == elem)
+        else if(*(p + b) == elem)
             return b;
         else
-            return binary_search(v[DIM], elem, a + 1, b - 1);
+            return binary_search(p, elem, a + 1, b - 1);
     }
 }
