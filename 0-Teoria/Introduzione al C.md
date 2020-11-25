@@ -408,9 +408,9 @@ Consentono di costruire condizioni complesse a partire da condizioni più sempli
 * XOR (Binario)
 Possono essere definiti in maniera univoca con la **tavola della verità**:
 * **Operatori binari**
-![](Introduzione%20al%20C/image_2020-09-30_14-07-27.png)
+![](Introduzione%20al%20C/image_2020-09-30_14-07-27%202.png)
 * **Operatore unario NOT**
-![](Introduzione%20al%20C/image_2020-09-30_14-07-40.png)
+![](Introduzione%20al%20C/image_2020-09-30_14-07-40%202.png)
 Nel linguaggio C, la sintassi degli operatori logici è:
 ```c
 condition && condition //AND
@@ -1608,7 +1608,7 @@ Le istruzioni `printf` e `scanf` utilizzano questi flussi standard.
 La funzione `printf` è quindi equivalente alla funzione `fprintf(stdout, ...);`. Similmente, `scanf` equivale a `fscanf(stdin, ...)`.
 
 ### Struttura della tabella dei file aperti
-![](Introduzione%20al%20C/Immagine%202020-11-04%20140430.png)
+![](Introduzione%20al%20C/Immagine%202020-11-04%20140430%202.png)
 - - - -
 ## Parametri a riga di comando
 Il compilatore `gcc` si lancia con il comando `gcc source.c -o executablename`.
@@ -2054,9 +2054,45 @@ Il quanto di tempo è gestito da una particolare interruzione, generata dall’o
 ### Gestione della memoria nel sistema operativo
 La gestione concorrente di molti programmi applicativi comporta la presenza di molti programmi nella RAM. Il sistema operativo offre ad ogni programma la visione di una memoria virtuale, che può avere dimensioni maggiori di quella fisica. Per gestire la memoria virtuale, il sistema operativo dispone di diversi meccanismi:
 * Rilocazione
-* 
+* Paginazione
 * Segmentazione
 
 #### Rilocazione
  Il programma non ha accesso alla memoria fisica ma solo alla memoria virtuale, che appare al programma della dimensione totale della memoria installata nel sistema (o anche maggiore). Il programma può riempire la memoria virtuale a partire dall’indirizzo 0. Attraverso la _rilocazione_, dopo aver calcolato con la compilazione quanta memoria sarà usata, il kernel trova una sezione di memoria fisica libera di quella quantità e segna l’indirizzo iniziale di questa porzione nel _registro base_. Ogni volta che il programma prova ad accedere all’indirizzo 0, il kernel lo _reindirizzerà_ al vero indirizzo attraverso la somma di un offset.
 Questo approccio causa un problema di frammentazione, risolvibile con la paginazione, ossia la divisione della memoria in parti più piccole.
+
+#### Paginazione
+Si rinuncia ad avere una zona contigua della memoria fisica per ciascun processo. La memoria virtuale del programma viene suddivisa in porzioni (_pagine virtuali_) di lunghezza fissa (potenze di 2). La memoria fisica viene divisa in pagine fisiche della stessa dimensione. Le pagine virtuali di un programma vengono caricate in altrettante pagine fisiche, non necessariamente contigue.
+
+#### Struttura degli indirizzi virtuali
+Un indirizzo virtuale è costituito da un **numero di pagina virtuale** (_NVP_) e da uno _spiazzamento_ (**offset**) all’interno della pagina.
+
+#### Struttura degli indirizzi fisici
+Un indirizzo fisico ha la stessa struttura di un indirizzo virtuale. Passando da un indirizzo virtuale ad uno fisico, l’unica parte che viene _tradotta_ è il numero di pagina virtuale. Il meccanismo più semplice per la traduzione delle pagine virtuali è la **tabella delle pagine**, che associa ad ogni pagina virtuale la corrispondente pagina fisica. Questa tabella viene memorizzata nella **MMU** (_Memory Management Unit_)	, una memoria associativa molto veloce e di dimensioni ridotte. Le memorie associative permettono di cercare un oggetto in più righe della tabella, per velocizzare il processo di traduzione.
+Poiché la tabella delle pagine sarebbe diversa per ogni processo, per non doverla ricostruire ogni volta che si cambia programma, la tabella contiene anche una colonna con l’ID del processo in esecuzione.
+
+### Pagine residenti e non
+Durante l’esecuzione di un programma, solo un certo numero delle sue pagine virtuali è caricato in altrettante pagine fisiche. Tali pagine sono dette **residenti**. Ad ogni accesso alla memoria si controlla che l’indirizzo virtuale corrisponda ad una pagina residente, altrimenti si produce un interrupt di segnalazione di errore detto _page fault_. Il processo viene sospeso in attesa che la pagina richiesta venga caricata in memoria, eventualmente scaricando su disco una pagina già residente per liberare lo spazio necessario.
+Su Windows, il file dove vengono salvate le pagine residenti si chiama _file di paging_. Nei sistemi Linux, si ha una partizione dedicata chiamata _swap_.
+
+## Gestione delle periferiche
+Sono meccanismi software a cui è affidato il compito di trasferire dati da e verso le periferiche. Consentono ai programmi applicativi di leggere o scrivere i dati con primitive di alto livello che nascondono la struttura fisica delle periferiche.
+Si distingue generalmente fra:
+* Driver fisici, che vengono utilizzati dal gestore delle interruzioni per il trasferimento dei dati
+* Driver logici, che fanno parte del sistema operativo e forniscono una gerarchia di memorie
+
+## Catena di sviluppo in C
+1. Scrittura
+2. Traduzione
+3. Collegamento
+4. Caricamento
+5. Esecuzione
+
+## Linguaggio Macchina
+Il linguaggio macchina è un linguaggio di **basso livello** che viene progettato _attorno_ al calcolatore:
+* richiede di conoscere esattamente la struttura del calcolatore (la sua _architettura_)
+* è _specifico_ per ogni calcolatore (in genere per ogni _famiglia_ di calcolatori)
+* permette di sfruttare al meglio le risorse fisiche della macchina
+
+## Un modello semplificato di calcolatore
+![](Introduzione%20al%20C/Schermata%202020-11-25%20alle%2014.55.46.png)
