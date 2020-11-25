@@ -92,6 +92,38 @@
 	* [[/Struttura della tabella dei file aperti]]
 * [[/Parametri a riga di comando]]
 	* [[/Utilizzare gli argomenti in C]]
+* [[/Matrici e puntatori]]
+* [[/Matrici e funzioni]]
+* [[/Array di puntatori e puntatori ad array]]
+* [[/Allocazione dinamica della memoria]]
+	* [[/Allocare la memoria]]
+	* [[/Allocare ed inizializzare la memoria]]
+	* [[/Deallocare la memoria]]
+	* [[/Lavorare con una sequenza di elementi]]
+* [[/Liste]]
+	* [[/Sintassi della lista]] 
+	* [[/Operazioni sulle liste]]
+* [[/Programmazione modulare]]
+	* [[/Linee guida]]
+	* [[/Modularizzazione in C]]
+* [[/Sistemi operativi]]
+	* [[/Architettura del sistema operativo]]
+	* [[/Tipi di sistema operativo]]
+	* [[/Gestione dei processi nel sistema operativo]]
+		* [[/Stato di un processo]]
+		* [[/Processi e sistema operativo]]
+		* [[/Chiamate al supervisor]]
+		* [[/Gestione del quanto di tempo]]
+	* [[/Gestione della memoria nel sistema operativo]]
+		* [[/Rilocazione]]
+		* [[/Paginazione]]
+		* [[/Struttura degli indirizzi virtuali]]
+		* [[/Struttura degli indirizzi fisici]]
+		* [[/Pagine residenti e non]]
+	* [[/Gestione delle periferiche]]
+	* [[/Catena di sviluppo in C]]
+* [[/Linguaggio Macchina]]
+	* [[/Un modello semplificato di calcolatore]]
 - - - -
 ## Primo programma in C
 ```c
@@ -408,9 +440,9 @@ Consentono di costruire condizioni complesse a partire da condizioni più sempli
 * XOR (Binario)
 Possono essere definiti in maniera univoca con la **tavola della verità**:
 * **Operatori binari**
-![](Introduzione%20al%20C/image_2020-09-30_14-07-27%202.png)
+![](Introduzione%20al%20C/image_2020-09-30_14-07-27.png)
 * **Operatore unario NOT**
-![](Introduzione%20al%20C/image_2020-09-30_14-07-40%202.png)
+![](Introduzione%20al%20C/image_2020-09-30_14-07-40.png)
 Nel linguaggio C, la sintassi degli operatori logici è:
 ```c
 condition && condition //AND
@@ -1608,7 +1640,7 @@ Le istruzioni `printf` e `scanf` utilizzano questi flussi standard.
 La funzione `printf` è quindi equivalente alla funzione `fprintf(stdout, ...);`. Similmente, `scanf` equivale a `fscanf(stdin, ...)`.
 
 ### Struttura della tabella dei file aperti
-![](Introduzione%20al%20C/Immagine%202020-11-04%20140430%202.png)
+![](Introduzione%20al%20C/Immagine%202020-11-04%20140430.png)
 - - - -
 ## Parametri a riga di comando
 Il compilatore `gcc` si lancia con il comando `gcc source.c -o executablename`.
@@ -1760,7 +1792,7 @@ for(i = 1; i < N && v[i - 1] != 0; i++)
 * N troppo grande: spreco memoria
 * N troppo piccolo: non riesco a memorizzare un’intera sequenza
 Soluzione: **Lista**
-
+- - - -
 ## Liste
 Una lista è una struttura dati che consente di rappresentare una sequenza di elementi:
 * di lunghezza variabile (non definita a priori)
@@ -1962,7 +1994,7 @@ Riassumendo:
 	1. Si evita lo spreco di memoria ed il rischio di overflow
 	2. A prezzo di un lieve aumento di occupazione di memoria dovuto ai puntatori
 	3. Da un punto di vista del tempo necessario all’esecuzione degli algoritmi: pro e contro (inserire in testa meglio, inserire in coda peggio...)
-
+- - - -
 ## Programmazione modulare
 Un sistema software è costituito da un insieme di moduli e da relazioni tra questi. Ogni modulo è costituito da un’**interfaccia** e da un’**implementazione**:
 * L’interfaccia è l’insieme di tutti e soli i suoi elementi che devono essere conosciuti da chi usa il modulo per farne un uso appropriato
@@ -1982,7 +2014,7 @@ In C, si utilizzano gli _header file_ `.h` per definire le interfacce, principal
 * dichiarazione di tipo e variabili
 * dichiarazione di funzione
 Le implementazioni vengono invece incluse in corrispondenti
-
+- - - -
 ## Sistemi operativi
 Il sistema operativo è un software importante poiché ha lo scopo di nascondere agli utenti ed ai programmatori tutto ciò che ha a che fare con la gestione dell’hardware presente nel calcolatore.
 
@@ -2013,7 +2045,7 @@ Esistono diversi tipi di sistema operativo, ma in generale si possono dividere i
 	* Esempi: Linux, UNIX, sistemi operativi moderni
 Non possono esistere sistemi operativi multiutente e monoprogrammati poiché essere multiutente significa poter gestire istanze multiple di uno stesso programma.
 
-### Gestione dei processi nel sistema operativo
+## Gestione dei processi nel sistema operativo
 Un processo non è esattamente un programma: un programma è del codice che è stato compilato o interpretato che svolge una certa funzione. Nel momento dell’esecuzione del programma, l’istanza del programma in esecuzione in quel momento è detta **processo** e si distingue poiché si può avere in esecuzione sulla propria macchina più processi dello stesso programma, che lavorano con dati diversi, si trovano in stati diversi.
 Il sistema operativo deve essere in grado di gestire l’esecuzione dei processi dei programmi utente. Deve poter distribuire le risorse del sistema ai vari processi equamente ed evitare conflitti e perciò ad ogni programma viene affidata una **macchina virtuale** realizzata dal sistema operativo che ne consente l’esecuzione come se la CPU del calcolatore fosse interamente dedicata a quel processo.
 Il modo in cui le risorse vengono gestite dal sistema operativo cambia a seconda della risorsa:
@@ -2051,23 +2083,23 @@ Perché usare la modalità privilegiata?
 ### Gestione del quanto di tempo
 Il quanto di tempo è gestito da una particolare interruzione, generata dall’orologio di sistema a una frequenza definita.
 
-### Gestione della memoria nel sistema operativo
+## Gestione della memoria nel sistema operativo
 La gestione concorrente di molti programmi applicativi comporta la presenza di molti programmi nella RAM. Il sistema operativo offre ad ogni programma la visione di una memoria virtuale, che può avere dimensioni maggiori di quella fisica. Per gestire la memoria virtuale, il sistema operativo dispone di diversi meccanismi:
 * Rilocazione
 * Paginazione
 * Segmentazione
 
-#### Rilocazione
+### Rilocazione
  Il programma non ha accesso alla memoria fisica ma solo alla memoria virtuale, che appare al programma della dimensione totale della memoria installata nel sistema (o anche maggiore). Il programma può riempire la memoria virtuale a partire dall’indirizzo 0. Attraverso la _rilocazione_, dopo aver calcolato con la compilazione quanta memoria sarà usata, il kernel trova una sezione di memoria fisica libera di quella quantità e segna l’indirizzo iniziale di questa porzione nel _registro base_. Ogni volta che il programma prova ad accedere all’indirizzo 0, il kernel lo _reindirizzerà_ al vero indirizzo attraverso la somma di un offset.
 Questo approccio causa un problema di frammentazione, risolvibile con la paginazione, ossia la divisione della memoria in parti più piccole.
 
-#### Paginazione
+### Paginazione
 Si rinuncia ad avere una zona contigua della memoria fisica per ciascun processo. La memoria virtuale del programma viene suddivisa in porzioni (_pagine virtuali_) di lunghezza fissa (potenze di 2). La memoria fisica viene divisa in pagine fisiche della stessa dimensione. Le pagine virtuali di un programma vengono caricate in altrettante pagine fisiche, non necessariamente contigue.
 
-#### Struttura degli indirizzi virtuali
+### Struttura degli indirizzi virtuali
 Un indirizzo virtuale è costituito da un **numero di pagina virtuale** (_NVP_) e da uno _spiazzamento_ (**offset**) all’interno della pagina.
 
-#### Struttura degli indirizzi fisici
+### Struttura degli indirizzi fisici
 Un indirizzo fisico ha la stessa struttura di un indirizzo virtuale. Passando da un indirizzo virtuale ad uno fisico, l’unica parte che viene _tradotta_ è il numero di pagina virtuale. Il meccanismo più semplice per la traduzione delle pagine virtuali è la **tabella delle pagine**, che associa ad ogni pagina virtuale la corrispondente pagina fisica. Questa tabella viene memorizzata nella **MMU** (_Memory Management Unit_)	, una memoria associativa molto veloce e di dimensioni ridotte. Le memorie associative permettono di cercare un oggetto in più righe della tabella, per velocizzare il processo di traduzione.
 Poiché la tabella delle pagine sarebbe diversa per ogni processo, per non doverla ricostruire ogni volta che si cambia programma, la tabella contiene anche una colonna con l’ID del processo in esecuzione.
 
@@ -2087,7 +2119,7 @@ Si distingue generalmente fra:
 3. Collegamento
 4. Caricamento
 5. Esecuzione
-
+- - - -
 ## Linguaggio Macchina
 Il linguaggio macchina è un linguaggio di **basso livello** che viene progettato _attorno_ al calcolatore:
 * richiede di conoscere esattamente la struttura del calcolatore (la sua _architettura_)
