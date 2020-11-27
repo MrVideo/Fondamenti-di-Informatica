@@ -1502,7 +1502,7 @@ In C i file sono quindi rappresentati come flussi e vengono fornite diverse funz
 ### Apertura e chiusura di un file
 Per poter utilizzare un file in un programma C è prima necessario _aprirlo_:
 ```c
-FILE *fopen(filename, mode)
+FILE *file = fopen(filename, mode)
 ```
 
 * `filename` è il nome del file da aprire, incluso il path
@@ -1520,6 +1520,7 @@ FILE *fopen(filename, mode)
 * `w+`: Crea un file testuale in lettura e scrittura
 * `rb+`: Apre un file binario in lettura e scrittura
 * `wb+`: Crea un file binario in lettura e scrittura
+
 Una volta utilizzato un file in un programma, è necessario chiuderlo:
 ```c
 int fclose(FILE *fp)
@@ -1730,7 +1731,7 @@ In C è possibile _allocare_ uno spazio di memoria tramite la funzione `malloc` 
 `type *p = malloc (size);`
 * `size` è la quantità in byte di memoria da allocare ed è generalmente espressa come `n * sizeof(type)`
 * La funzione riserva uno spazio di memoria delle dimensioni richieste e ne restituisce l’indirizzo
-* Nel caso non sia possibile riservare uno spazio di memoria con le caratteristiche richieste, la funzione ritorna `NULL`
+	* Nel caso non sia possibile riservare uno spazio di memoria con le caratteristiche richieste, la funzione ritorna `NULL`
 
 Esempio:
 `float *v = malloc(5 * sizeof(float)); //Alloca 5 float`
