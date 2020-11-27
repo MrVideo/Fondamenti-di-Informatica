@@ -24,26 +24,29 @@ int main()
 	return 0;
 }
 
-void inserisci (lista *l, char c)
+void inserisci(lista *l, char c)
 {
+    //Inizio lista
 	lista cur, pre, p;
 	cur = *l;
 	pre = NULL;
 
+    //Finché cur punta a qualcosa, cioè finché non siamo alla fine della lista
+    //Finché il carattere passato alla funzione viene dopo a quello nella lista
 	while(cur != NULL && c > cur->car)
 	{
-		pre = cur;
+		pre = cur; //Scorri in avanti la lista
 		cur = cur->next;
 	}
 
-	p = malloc(sizeof(car_t));
-	p->car = c;
-	p->next = cur;
+	p = malloc(sizeof(car_t)); //Aggiungi un nodo
+	p->car = c; //Assegna il carattere passato alla funzione a car nel nuovo nodo
+	p->next = cur; //Fai puntare il next del nuovo nodo al nodo corrente
 
-	// aggiorna il next dell'elemento precedente a quello appena inserit
+	//Aggiorna il next dell'elemento precedente a quello appena inserito
 	if (pre!=NULL)
 		pre->next = p;
-	else //se pre == NULL, p diventa la nuova testa della lista
+	else //Se pre == NULL, p diventa la nuova testa della lista
 		*l = p;	
 }
 
@@ -53,16 +56,16 @@ void carica(char filename[], lista *l)
 	char c;
 	int n, i;
 
-	f = fopen(filename,"r");
-	if (f != NULL)
+	f = fopen(filename,"r"); //Apre il file passato alla funzione in read mode
+	if(f != NULL) //Se il file esiste (se il suo puntatore punta a qualcosa)
 	{
-		while (fscanf(f, "%c%d", &c, &n) == 2)
+		while (fscanf(f, "%c%d", &c, &n) == 2) //Finché la fscanf ritorna sempre 2 valori (lettera e frequenza della lettera) dal file
 		{
-			for (i = 0; i < n; i++)
-				inserisci(l, c);
+			for (i = 0; i < n; i++) //Aggiungi questi due valori alla lista
+				inserisci(l, c); //Passandoli all'interno della funzione inserisci
 		}
 
-		fclose(f);
+		fclose(f); //Chiudi il file
 	}	
 }
 
@@ -73,32 +76,33 @@ void salva(char filename[], lista l)
 	int n;
 	lista cur;
 
-	f = fopen(filename,"w");
-	if (f != NULL)
+	f = fopen(filename,"w"); //Apri il file passato alla funzione in write mode
+	if (f != NULL) //Se il file esiste (se il suo puntatore punta a qualcosa)
 	{
-		cur = l;
-		while(cur != NULL)
+		cur = l; //Inizia alla testa della lista
+		
+        while(cur != NULL) //Finché abbiamo ancora nodi nella lista (finché cur non punta a nulla)
 		{
-			if (cur == l)
+			if (cur == l) //Se il corrente è alla testa della lista
 			{
-				c = cur->car;
-				n = 1;
+				c = cur->car; //Il carattere da stampare è quello contenuto nel nodo corrente della lista
+				n = 1; //E la sua frequenza è uno
 			}
-			else if (cur->car != c)
+			else if (cur->car != c) //Altrimenti se il carattere successivo (siamo passati al nodo successivo) è diverso da c (cioè il carattere precedente)
 			{
-				fprintf(f, "%c%d", c, n);
-				c = cur->car;
-				n = 1;
+				fprintf(f, "%c%d", c, n); //Stampa sul file il carattere corrente e la sua frequenza (che aumenta se il c precedente è uguale al successivo)
+				c = cur->car; //Assegna il carattere successivo nella lista a c
+				n = 1; //Ed assegnagli frequenza 1
 			}
 			else
-				n++;
+				n++; //Altrimenti aumenta la frequenza del carattere c se continua ad esserci lo stesso carattere
 
-			cur = cur->next;
+			cur = cur->next; //Scorri la lista in avanti
 		}
 
-		if (l != NULL)			
-			fprintf(f, "%c%d", c, n);
+		if(l != NULL) //Se la lista non è finita (se c'è almeno un nodo)		
+			fprintf(f, "%c%d", c, n); //Stampa sul file il carattere e la sua frequenza
 
-		fclose(f);
+		fclose(f); //Chiudi il file
 	}
 }
