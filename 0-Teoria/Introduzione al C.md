@@ -2125,7 +2125,178 @@ Si distingue generalmente fra:
 Il linguaggio macchina è un linguaggio di **basso livello** che viene progettato _attorno_ al calcolatore:
 * richiede di conoscere esattamente la struttura del calcolatore (la sua _architettura_)
 * è _specifico_ per ogni calcolatore (in genere per ogni _famiglia_ di calcolatori)
-* permette di sfruttare al meglio le risorse fisiche della macchina
+permette di sfruttare al meglio le risorse fisiche della macchina
 
 ## Un modello semplificato di calcolatore
 ![](Introduzione%20al%20C/Schermata%202020-11-25%20alle%2014.55.46.png)
+
+## Quali istruzioni mi servono?
+### Istruzioni I/O
+* `READ`: legge un dato dal nastro di lettura e lo salva nell’accumulatore
+* `WRITE`: prende un dato dall’accumulatore e lo scrive sul nastro di scrittura
+
+### Gestione della memoria
+* `LOAD x`: carica il dato all’indirizzo `x` dalla memoria
+* `STORE x`: salva il dato all’indirizzo `x` della memoria
+
+### Operazioni aritmetiche
+* `ADD x`: somma il contenuto della cella di memoria all’indirizzo `x` all’accumulatore 
+* `SUB x`: sottrae il contenuto della cella di memoria all’indirizzo `x` all’accumulatore
+* `MULT x`: moltiplica il contenuto della cella di memoria all’indirizzo `x` all’accumulatore
+* `DIV x`: divide il contenuto della cella di memoria all’indirizzo `x` all’accumulatore
+Il primo operando dell’operazione è quello contenuto nell’accumulatore, il secondo è quello specificato nel comando attraverso l’indirizzo di memoria
+
+### Controllo di flusso
+* `BR x`: salta direttamente all’istruzione x
+* `BEQ x`: salta all’istruzione x se il valore dell’accumulatore è uguale a zero
+* `BNE x`: salta all’istruzione x se il valore dell’accumulatore è diverso da zero
+* `BL x`: salta all’istruzione x se il valore dell’accumulatore è minore di 0
+* `BLE x`: salta all’istruzione x se il valore dell’accumulatore è minore o uguale a 0
+* `BG x`: salta all’istruzione x se il valore dell’accumulatore è maggiore o maggiore di 0
+* `BGE x`: salta all’istruzione x se il valore dell’accumulatore è maggiore o uguale a 0
+* `END`: termina il programma
+
+## Come traduciamo un semplice programma?
+In C:
+```c
+scanf(“%d”, &x);
+scanf(“%d”, &y);
+printf(“%d”, x + y);
+```
+
+In linguaggio macchina:
+```
+1. READ
+2. STORE 101
+3. READ
+4. ADD 101
+5. WRITE
+6. END
+```
+
+## Indirizzamento
+Tutte le istruzioni che interagiscono con la memoria possono sfruttare differenti approcci per accedere allo spazio di memorizzazione:
+* Indirizzamento _diretto_
+* Indirizzamento _indiretto_
+* Indirizzamento _esplicito_
+Se assumiamo la generica istruzione `ISTR` otteniamo:
+* Indirizzamento **diretto**: `ISTR 13` - carico _direttamente dalla cella 13_ della memoria
+* Indirizzamento **indiretto**: `ISTR@ 11` - carico il valore della cella all’indirizzo memorizzato _nella cella di memoria numero 11_
+* Indirizzamento **esplicito**: `ISTR=14` - carico _direttamente_ il valore 14
+
+Esempio: sommatoria di N numeri
+In C:
+```c
+scanf(“%d”, &n);
+s = 0;
+for(i = 0; i < n; i++)
+{
+	scanf(“%d”, &x)	
+	s = s + x;
+}
+printf(“%d”, s);
+```
+
+In linguaggio macchina:
+```
+1. READ
+2. STORE 101
+3. LOAD= 0
+4. STORE 102
+5. LOAD 101
+6. BEQ 13
+7. SUB= 1
+8. STORE 101
+9. READ
+10. ADD 102
+11. STORE 102
+12. BR 5
+13. LOAD 102
+14. WRITE
+15. END
+```
+
+## Gestire gli array
+Serve una cella per memorizzare il contatore degli elementi letti. Ciascun elemento verrà memorizzato all’indirizzo successivo a quello usato per il numero precedente.
+Si può usare l’indirizzamento indiretto per memorizzare gli elementi della sequenza in un indirizzo sempre diverso. Servirà utilizzare una cella di memoria per contenere l’indirizzo da utilizzare per l’elemento corrente.
+
+## Gestione della memoria con sottoprogrammi
+### Gestione a pila o stack
+![](Introduzione%20al%20C/Foto%2030%20nov%202020,%20093527.jpg)
+Un **record di attivazione** è una parte di memoria che serve al corretto funzionamento di una funzione e della sua terminazione.
+Il **record di attivazione** (RA) contiene:
+* Parametri attuali
+* Variabili locali
+* Indirizzo di ritorno (RetAdd)
+* (Valore precedente dello) stack pointer (SP)
+
+#### Funzionamento della chiamata
+* Riserva memoria per il risultato (se previsto)
+* Assegna valore ai parametri attuali
+* Assegna l’indirizzo di ritorno
+* Assegna il link dinamico
+* Aggiorna l’indirizzo di base del nuovo record di attivazione
+* Assegna il nuovo valore allo stack pointer
+* Salta alla prima istruzione del chiamato
+
+#### Il ritorno
+* Riporta il valore dello stack pointer al valore precedente
+* Riporta il valore dell’indirizzo di base al valore precedente
+* Salta all’indirizzo di ritorno
+
+## Ma il linguaggio macchina non dovrebbe essere binario?
+### Linguaggio assemblativo e linguaggio macchina
+Quello visto finora è un _linguaggio assemblativo_ (_assembly_), un linguaggio macchina _simbolico_ per facilitare la lettura e scrittura dei programmi. La sua traduzione in linguaggio macchina (operata da un programma chiamato _assembler_) è molto semplice. Le regole di traduzione richiedono tuttavia diverse scelte progettuali:
+* Ad ogni tipo di istruzione viene associato un codice operativo binario
+* Viene definita la dimensione massima degli operandi (che dipende, tra le altre cose, dalla dimensione massima della memoria indirizzabile)
+* Viene quindi definita la dimensione finale che occuperà la traduzione di ogni possibile istruzione
+
+## Costruiamo il nostro linguaggio macchina
+### Codice operativo delle istruzioni
+![](Introduzione%20al%20C/Foto%2030%20nov%202020,%20100143.jpg)
+
+### Dimensione operandi ed istruzioni
+Per semplicità, ipotizziamo che la memoria indirizzabile nel nostro sistema sia 2^10 celle (o parole). Sempre per semplicità, ipotizziamo che anche le costanti numeriche nei programmi siano comprese tra 0 e 1023. Tutti gli operandi sono quindi rappresentabili con 10 bit. Il codice operativo richiede 5 bit. Le istruzioni richiedono 15 bit, ma noi ne useremo 16 (1 bit di _padding_).
+- - - -
+## Introduzione all’architettura del calcolatore e catena di programmazione in C
+### La macchina di Von Neumann
+![](Introduzione%20al%20C/IMG_9F6FA1B3CC58-1.jpeg)
+
+### La memoria centrale
+
+### L’unità di elaborazione (CPU)
+![](Introduzione%20al%20C/5ECC0CE6-6F6E-48D1-9924-411B3AA902E0.png)
+* **Clock**: gestisce la frequenza di operazione del processore
+* **Registro di stato**: registra delle flag che indicano certi eventi
+	* Bit di carry
+	* Z
+	* S
+	* V
+* **Unità aritmetico-logica**: parte della CPU che gestisce le operazioni aritmetiche e logiche
+* **Registro dati**: parola letta o da scrivere in memoria
+* **Registro di istruzione corrente**: contiene l’istruzione che stiamo eseguendo al momento
+* **Registro interruzioni**: gestisce le interruzioni delle periferiche
+* **Registro contatore di programma**: indirizzo della prossima istruzione da eseguire
+
+Tutta la CPU è collegata al Bus di sistema, ma non tutti i componenti della CPU sono connessi direttamente al Bus esterno. Le comunicazioni avvengono secondo un sistema _Master / Slave_.
+Esistono Bus per diversi scopi:
+* Bus dati
+* Bus indirizzi
+* Bus controlli
+
+### Interfacce periferiche
+Contengono le seguenti componenti:
+* Peripheral Data Register (PDR)
+* Peripheral Command Register (PCR)
+* Peripheral State Register (PSR)
+
+Esempio:
+Supponiamo di dover eseguire un’istruzione che carica il contenuto della cella di memoria all’indirizzo 123 nel registro R1
+`0100000111101101 LOAD 123, R1`
+![](Introduzione%20al%20C/048E48E5-5126-4ECC-BF37-413C821B52A5.png)
+* **Fase di fetch istruzione**: la CPU carica dalla memoria centrale la prossima istruzione da eseguire
+* **Fase di interpretazione istruzione**: comprendere l’istruzione presente nel registro
+* **Fase di esecuzione istruzione**: eseguire l’istruzione _decodificata_ precedentemente
+
+### Lettura e scrittura di un dato in memoria centrale
+![](Introduzione%20al%20C/E8AA1ABA-5E51-4763-9A00-D8547C52FB1A.png)
