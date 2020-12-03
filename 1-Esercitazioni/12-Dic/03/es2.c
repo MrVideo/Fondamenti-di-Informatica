@@ -30,7 +30,7 @@ int main()
 
     lista l2 = selezione(l, arr);
 
-    stampa l;
+    stampa(l);
 }
 
 lista selezione(lista l, int sel[])
@@ -42,9 +42,9 @@ lista selezione(lista l, int sel[])
     else
     {
         struct nodo *p;
-        p = malloc(sizeof(struct(nodo)));
+        p = malloc(sizeof(struct nodo));
 
-        p -> elem = l -> elem;
+        p -> data = l -> data;
         p -> next = selezione(l -> next, sel + 1);
         
         return p;
@@ -53,10 +53,25 @@ lista selezione(lista l, int sel[])
 
 lista inserisci_in_testa(lista l, int elem)
 {
-
+    struct nodo *p;
+    p = malloc(sizeof(struct nodo));
+    p -> next = l;
+    p -> data = elem;
+    return p;
 }
 
 lista inserisci_in_coda(lista l, int elem)
 {
+    if(l == NULL)
+        return inserisci_in_testa(l, elem);
+    else
+    {
+        l -> next = inserisci_in_coda(l -> next, elem);
+        return l;
+    }
+}
 
+void stampa(lista l)
+{
+    
 }
