@@ -5,15 +5,21 @@
 
 #define WORD_LENGTH 15
 
+void printNum(FILE *fp);
+
 int main()
 {
     FILE *input = fopen("input.txt", "r");
+
+    system("clear");
 
     if(input == NULL)
         printf("\nFile error\n");
     else
         printNum(input);
     
+    printf("\n");
+
     return 0;
 }
 
