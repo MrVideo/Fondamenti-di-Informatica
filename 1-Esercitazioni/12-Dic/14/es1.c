@@ -31,7 +31,7 @@ void split_pari(lista *l)
     
     while(cur != NULL)
     {
-        if(cur -> el % 2 == 0)
+        if(cur -> el % 2 == 0 && cur -> el != 0)
         {
             cur -> el = cur -> el / 2; //Divido l'elemento a metà
             temp = malloc(sizeof(struct nodo)); //Assegno spazio al nuovo nodo
