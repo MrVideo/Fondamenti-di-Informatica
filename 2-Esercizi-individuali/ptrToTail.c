@@ -27,7 +27,10 @@ int main()
 
     print(l);
 
+    l = delete(l, 1);
     l = delete(l, 2);
+    l = delete(l, 3);
+    l = delete(l, 4);
 
     print(l);
     
