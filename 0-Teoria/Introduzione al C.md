@@ -121,7 +121,7 @@
 		* [[/Struttura degli indirizzi fisici]]
 		* [[/Pagine residenti e non]]
 	* [[/Gestione delle periferiche]]
-	* [[/Catena di sviluppo in C]]
+* [[/Catena di sviluppo in C]]
 * [[/Linguaggio Macchina]]
 	* [[/Un modello semplificato di calcolatore]]
 - - - -
@@ -1021,7 +1021,7 @@ struct libro
 	int pagine;
 	char autore[30];
 	char titolo[100];
-}
+};
 
 struct libro l;
 ```
@@ -1799,7 +1799,7 @@ Una lista è una struttura dati che consente di rappresentare una sequenza di el
 * di lunghezza variabile (non definita a priori)
 * che permette di inserire e rimuovere elementi _dinamicamente_
 La lista viene implementata attraverso una sequenza di _nodi_, ciascuno dei quali contiene:
-* un elemento della sequenza che so vuole rappresentare
+* un elemento della sequenza che si vuole rappresentare
 * un puntatore al nodo successivo
 L’accesso alla lista avviene tramite un puntatore `head` che punta al primo nodo della lista.
 Il puntatore dell’ultimo nodo conterrà il valore `NULL` per indicare che non ci sono elementi successivi (nel caso la lista sia vuota, sarà `head` a contenere `NULL`)
@@ -1828,163 +1828,93 @@ lista head;
 5. Rimuovi un elemento specifico
 
 ```c
-#include <stdio.h>
-#include <stdlib.h>
-
-typedef int data;
-
-struct nodo
-{
-	data el;
-	struct nodo *next;
-};
-
-typedef struct nodo *lista;
-
-int lunghezza(lista l); //Lunghezza della lista
-int lunghezza_ric(lista l); //Lunghezza della lista
-int ricerca(lista l, data el); //Ricerca di un elemento
-int ricerca_ric(lista l, data el); //Ricerca di un elemento
-lista inserisci_testa(lista ll, data el); //Aggiungi elemento in testa
-lista inserisci_coda(lista l, data el); //Aggiungi elemento in coda
-lista inserisci_coda_ric(lista l, data el); //Aggiungi elemento in coda
-lista rimuovi_testa(lista l); //Rimuovi elemento in testa
-lista rimuovi_coda(lista l); //Rimuovi elemento in coda
-lista rimuovi(lista l); //Rimuovi elemento qualunque
-
-int main()
-{
-	lista l = NULL;
-	int lung;
-	//Ipotizzo di aver riempito la lista
-	lung = lunghezza(l)
-
-	if(ricerca(l, 3))
-		printf(“\nL’elemento 3 è presente nella lista\n”);
-}
+#include "liste.h"
 
 int lunghezza(lista l)
 {
-	int lung = 0;
-	
-	while(l != NULL)
-	{
-		lung++;
-		l = l -> next; //(*l).next
-	}
-	return lung;	
+    if(l == NULL)
+        return 0;
+    else
+        return 1 + lunghezza(l -> next);
 }
 
-int lunghezza_ric(lista l)
+lista ricerca(lista l, data el)
 {
-	if(l == NULL)
-		return 0;
-	else
-		return 1 + lunghezza_ric(l -> next);
+    if(l == NULL || l -> el == el)
+        return l;
+    else
+        return ricerca(l -> next, el);
 }
 
-int ricerca(lista l, data el)
+lista inserisci_testa(lista l, data el)
 {
-	while(l != NULL)
-	{
-		if(l -> el == el)
-			return 1;
-		l = l -> next;
-	}
-	return 0;
-}
-
-int ricerca_ric(lista l, data el)
-{
-	if(l == NULL)
-		return 0;
-	if(l -> el == el)
-		return 1;
-	return ricerca_ric(l -> next, el);
-}
-
-lista inserisci_testa(lista ll, data el)
-{
-	struct nodo *tmp = malloc(sizeof(struct nodo));
-	tmp -> el = el;
-	tmp -> next = ll;
-	return tmp
+    struct nodo *temp = malloc(sizeof(struct nodo));
+    temp -> el = el;
+    temp -> next = l;
+    return temp;
 }
 
 lista inserisci_coda(lista l, data el)
 {
-	struct nodo *temp = malloc(sizeof(struct nodo));
-	lista cur = l;
-	tmp -> el = el;
-	tmp -> next = NULL;
-	while(cur -> next != NULL)
-	{
-		cur = cur -> next;
-	}
-	cur -> next = tmp;
-	return l;
-}
-
-lista inserisci_coda_ric(lista l, data el)
-{
-	if(l == NULL)
-		return inserisci_testa(l, el);
-	else
-	{
-		l -> next = inserisci_coda(l -> next, el);
-		return l;
-	}
+    if(l == NULL)
+        return inserisci_testa(l, el);
+    else
+    {
+        l -> next = inserisci_coda(l -> next, el);
+        return l;
+    }
 }
 
 lista rimuovi_testa(lista l)
 {
-	lista tmp;
-	if(l != NULL)
-	{
-		tmp = l;
-		l = l -> next;
-		free(tmp);
-	}
-	return l;
+    if(l != NULL)
+    {
+        lista temp = l;
+        l = l -> next;
+        free(temp);
+    }
+
+    return l;
 }
 
 lista rimuovi_coda(lista l)
 {
-	lista cur = l, prec = NULL;
-	if(l != NULL)
-	{
-		while(cur -> next != NULL)
-		{
-			prec = cur;
-			cur = cur -> next;
-		}
-		if(prec != NULL)
-		{
-			prec -> next = NULL;
-			free(cur);
-			return l;
-		}
-		else
-		{
-			free(cur);
-			return NULL;
-		}
-	}
-	else		
-		return NULL;
+    if(l != NULL)
+    {
+        if(l -> next == NULL)
+            return rimuovi_testa(l);
+        else
+        {
+            l -> next = rimuovi_coda(l -> next);
+            return l;
+        }
+    }
+    else
+        return NULL;
 }
 
 lista rimuovi(lista l, data el)
 {
-	if(l == NULL)
-		return NULL;
-	if(l -> el == el)
-		return rimuovi_testa(l)
-	else
-	{
-		l -> next = rimuovi(l -> next);
-		return l;
-	}
+    if(l == NULL)
+        return l;
+    if(l -> el == el)
+        return rimuovi_testa(l);
+    else
+    {
+        l -> next = rimuovi(l -> next, el);
+        return l;
+    }
+}
+
+void stampa(lista l)
+{
+    if(l == NULL)
+        printf("END\n");
+    else
+    {
+        printf("%d -> ", l -> el);
+        stampa(l -> next);
+    }
 }
 ```
 
@@ -2024,11 +1954,11 @@ Il sistema operativo è tipicamente organizzato a _strati_:
 1. Programmi utente
 2. Interprete comandi
 3. File system
-4. Gestione delle periferiche
-5. Gestione della memoria
-6. Gestione dei processi
+4. **Gestione delle periferiche**
+5. **Gestione della memoria**
+6. **Gestione dei processi**
 7. Macchina fisica
-Gestione dei processi, della memoria e delle periferiche sono _indispensabili_ per il funzionamento del sistema operativo: ne costituiscono il **kernel** (_nucleo_).
+Gestione dei **processi**, della **memoria** e delle **periferiche** sono _indispensabili_ per il funzionamento del sistema operativo: ne costituiscono il **kernel** (_nucleo_).
 
 ### Tipi di sistema operativo
 Esistono diversi tipi di sistema operativo, ma in generale si possono dividere in:
@@ -2047,106 +1977,246 @@ Esistono diversi tipi di sistema operativo, ma in generale si possono dividere i
 Non possono esistere sistemi operativi multiutente e monoprogrammati poiché essere multiutente significa poter gestire istanze multiple di uno stesso programma.
 
 ## Gestione dei processi nel sistema operativo
-Un processo non è esattamente un programma: un programma è del codice che è stato compilato o interpretato che svolge una certa funzione. Nel momento dell’esecuzione del programma, l’istanza del programma in esecuzione in quel momento è detta **processo** e si distingue poiché si può avere in esecuzione sulla propria macchina più processi dello stesso programma, che lavorano con dati diversi, si trovano in stati diversi.
+Un processo _non è_ esattamente un programma: un programma è del codice che è stato compilato o interpretato che svolge una certa funzione. Nel momento dell’esecuzione del programma, _l’istanza del programma in esecuzione in quel momento_ è detta **processo** e si distingue poiché si può avere in esecuzione sulla propria macchina _più processi dello stesso programma_, che lavorano con dati diversi e si trovano in stati diversi. Un processo può essere:
+* Del codice eseguibile
+* Dei dati del programma
+* Delle informazioni sul funzionamento del programma (il suo _stato_).
 Il sistema operativo deve essere in grado di gestire l’esecuzione dei processi dei programmi utente. Deve poter distribuire le risorse del sistema ai vari processi equamente ed evitare conflitti e perciò ad ogni programma viene affidata una **macchina virtuale** realizzata dal sistema operativo che ne consente l’esecuzione come se la CPU del calcolatore fosse interamente dedicata a quel processo.
 Il modo in cui le risorse vengono gestite dal sistema operativo cambia a seconda della risorsa:
 * Alcune sono **indivisibili**, come i dispositivi di I/O, di rete, CPU
 * Alcune sono **divisibili**, come la RAM o l’Hard Disk
 
-### Stato di un processo
-Lo stato del processo può essere distinto fra stato **interno** ed **esterno**.
-Lo stato interno indica:
-* La prossima istruzione del programma che deve essere eseguita
-* I valori delle variabili e dei registri utilizzati dal processo
-Lo stato esterno indica:
-* Se il processo è in attesa di un evento (lettura dal disco, inserimento di dati da tastiera…)
-* Se il processo è in esecuzione
-* Se il processo è pronto all’esecuzione e quindi attende di accedere alla CPU
-
-I processi appena creati sono messi in stato di _pronto_, il kernel decide quale processo pronto mettere in esecuzione. Il kernel assegna il processore ad un processo per un quanto di tempo.
-* Coda dei processi pronti
-* Round-robin
-* Priorità dei processi
-
-_Pre-emption_: quando il quanto di tempo è scaduto, il kernel interrompe il processo in esecuzione.
-
 ### Processi e sistema operativo
-Anche il sistema operativo è implementato tramite processi. Il sistema operativo garantisce che i conflitti tra i processi sono controllati e gestiti correttamente, e perciò viene eseguito in modalità privilegiata (_kernel mode_ o _supervisor_), così da poter controllare gli altri processi eseguiti in modalità user.
+Anche il sistema operativo è implementato tramite processi. Il sistema operativo garantisce che i conflitti tra i processi siano controllati e gestiti correttamente, e perciò viene eseguito in modalità privilegiata (_kernel mode_ o _supervisor_), così da poter controllare gli altri processi eseguiti in modalità user.
 
 ### Chiamate al supervisor
 I processi utente per eseguire operazioni privilegiate invocano il supervisor tramite chiamate di sistema.
 Perché usare la modalità privilegiata?
-* Le operazioni di I/O sono operazioni riservate
-	* Un processo non deve poter andare a scrivere messaggi su un terminale non associato allo stesso processo
-* Un processo non deve poter sconfinare al di fuori di uno spazio di memoria
+* **Le operazioni di I/O sono operazioni riservate**
+	* Un processo non deve poter andare a _scrivere messaggi_ su un terminale non associato allo stesso processo
+	* Un processo non deve poter _leggere_ caratteri immessi da un terminale non associato allo stesso processo
+* **Un processo non deve poter sconfinare al di fuori di uno spazio di memoria**
+	* Per _non accedere allo spazio di memoria associato ad un altro processo_, modificando codice e dati di quest’ultimo
+	* Per _non occupare tutta la memoria disponibile nel sistema_, bloccandolo e rendendolo inutilizzabile ad altri processi
 * La condivisione di risorse dev’essere tale da cautelare i dati di ogni utente
 
+### Stato di un processo
+Lo stato del processo può essere distinto fra stato **interno** ed **esterno**.
+
+Lo stato _interno_ indica:
+* La prossima istruzione del programma che deve essere eseguita
+* I valori delle variabili e dei registri utilizzati dal processo
+
+Lo stato _esterno_ indica:
+* Se il processo è in attesa di un evento (lettura dal disco, inserimento di dati da tastiera…)
+* Se il processo è in esecuzione
+* Se il processo è pronto all’esecuzione e quindi attende di accedere alla CPU
+
+Gli stati di un processo possono essere:
+1. **In esecuzione**: processo assegnato al processore ed eseguito
+2. **Pronto**: il processo può essere eseguito se il gestore dei processi lo decide
+3. **In attesa**: il processo attende il verificarsi di un evento esterno per andare in stato di _pronto_
+
+### Workflow per l’esecuzione di un processo
+1. Due processi appena creati sono messi in stato di _pronto_.
+2. Il kernel decide quale processo pronto mettere in esecuzione.
+3. Il kernel assegna il processore al processo selezionato per un quanto di tempo.
+	* Coda dei processi pronti
+	* Round-robin
+	* Priorità dei processi
+4. Il processo in esecuzione passa in stato di _attesa_ poiché ha richiesto operazioni di I-O (_interruzione interna_). Questo corrisponde all’esecuzione dell’istruzione _chiamata a supervisore_ (**SuperVisor Call** o **SVC**).
+5. Il processore è ora libero ed il secondo processo può essere eseguito. Il primo processo ha un _cambiamento di contesto_ ed il suo _contesto_ viene salvato nel suo _descrittore di processo_.
+6. Quando l’operazione di I-O si conclude per il primo processo, viene generata un’**interruzione esterna** dal _gestore delle interruzioni_.
+7. Il processo in esecuzione viene interrotto ed il primo processo può essere di nuovo in _pronto_. Il kernel può ora decidere quale processo eseguire.
+
+_Pre-emption_: quando il quanto di tempo è scaduto, il kernel interrompe il processo in esecuzione. Così si cerca di garantire un uso equo della CPU a tutti i processi.
+
 ### Gestione del quanto di tempo
-Il quanto di tempo è gestito da una particolare interruzione, generata dall’orologio di sistema a una frequenza definita.
+Il quanto di tempo è gestito da una particolare interruzione, generata dall’orologio di sistema.
+* Con una frequenza definita, l’orologio di sistema genera un’interruzione. La routine di risposta relativa incrementa una variabile opportuna che contiene il tempo di esecuzione del processo corrente
+	* Se il quanto di tempo non è scaduto, la routine termina. Se non ci sono interruzioni annidate, il processo prosegue nell’esecuzione.
+	* Se invece il quanto è scaduto, viene invocata una particolare funzione del kernel, la **preempt**, che cambia lo stato del processo da _in esecuzione_ a _pronto_, salva il contesto del processo ed attiva una particolare funzione del kernel, la **change**, che esegue una commutazione di contesto e manda in esecuzione un processo 
 
 ## Gestione della memoria nel sistema operativo
-La gestione concorrente di molti programmi applicativi comporta la presenza di molti programmi nella RAM. Il sistema operativo offre ad ogni programma la visione di una memoria virtuale, che può avere dimensioni maggiori di quella fisica. Per gestire la memoria virtuale, il sistema operativo dispone di diversi meccanismi:
-* Rilocazione
-* Paginazione
-* Segmentazione
+La gestione concorrente di molti programmi applicativi comporta la presenza di molti programmi nella RAM. Il sistema operativo offre ad ogni programma la visione di una **memoria virtuale**, che può avere **dimensioni maggiori di quella fisica**.
+Per gestire la memoria virtuale, il sistema operativo dispone di diversi meccanismi:
+* **Rilocazione**
+* **Paginazione**
+* **Segmentazione**
+
+### Modello di memoria
+![](Introduzione%20al%20C/DC539A37-E3BF-4692-8077-BD9675A48912.png)
+* Il modello di memoria di un calcolatore è lineare
+* La memoria è una sequenza di celle numerate da 0 ad un valore massimo M
+* Il numero che identifica ogni cella è detto _indirizzo_
+* La dimensione della cella dipende dal tipo di calcolatore (per noi è 8 bit, ossia un byte)
+
+### Spazio di indirizzamento
+Lo spazio di indirizzamento è il numero massimo di indirizzi possibili della memoria e dipende dalla lunghezza in bit degli indirizzi: se gli indirizzi sono lunghi N bit, lo spazio di indirizzamento sarà di `2^N` celle.
+Tutte le celle devono essere indirizzabili (cioè tutte le celle devono avere un indirizzo), perciò la dimensione della memoria è _minore o uguale_ allo spazio di indirizzamento.
+Generalmente, le dimensioni della memoria sono espresse in:
+* KB (Kilobyte) = `2^10` byte
+* MB (Megabyte) = `2^20` byte
+* GB (Gigabyte) = `2^30` byte
+
+### Memoria virtuale e fisica
+* Gli indirizzi **contenuti in un programma eseguibile** sono indirizzi _virtuali_ e fanno riferimento alla _memoria virtuale_.
+* La memoria **effettivamente presente nel calcolatore** è la _memoria fisica_ ed i suoi indirizzi sono detti indirizzi _fisici_. La memoria fisica **può essere insufficiente** a contenere la memoria virtuale di tutti i processi.
+* La **rilocazione dinamica** è uno dei meccanismi di trasformazione tra indirizzi virtuali e fisici.
+![](Introduzione%20al%20C/3DEDE6A4-984B-4E07-ADA3-17B9873410BD.png)
+La memoria virtuale e quella fisica non coincidono per i seguenti motivi:
+1. Nella memoria fisica risiedono _contemporaneamente_ sistema operativo e processi
+2. Conviene mantenere nella memoria fisica u_na sola copia_ di parti di programmi che sono _uguali in diversi processi_ (_memoria condivisa_)
+
+Per evitare la _frammentazione_ della memoria (ossia la presenza di spazi vuoti inutilizzabili), è utile allocare i programmi **suddividendoli in pezzi**.
+![](Introduzione%20al%20C/7E1B3927-04B9-4A20-A5AE-7BF05AD29582.png)
 
 ### Rilocazione
  Il programma non ha accesso alla memoria fisica ma solo alla memoria virtuale, che appare al programma della dimensione totale della memoria installata nel sistema (o anche maggiore). Il programma può riempire la memoria virtuale a partire dall’indirizzo 0. Attraverso la _rilocazione_, dopo aver calcolato con la compilazione quanta memoria sarà usata, il kernel trova una sezione di memoria fisica libera di quella quantità e segna l’indirizzo iniziale di questa porzione nel _registro base_. Ogni volta che il programma prova ad accedere all’indirizzo 0, il kernel lo _reindirizzerà_ al vero indirizzo attraverso la somma di un offset.
 Questo approccio causa un problema di frammentazione, risolvibile con la paginazione, ossia la divisione della memoria in parti più piccole.
 
 ### Paginazione
-Si rinuncia ad avere una zona contigua della memoria fisica per ciascun processo. La memoria virtuale del programma viene suddivisa in porzioni (_pagine virtuali_) di lunghezza fissa (potenze di 2). La memoria fisica viene divisa in pagine fisiche della stessa dimensione. Le pagine virtuali di un programma vengono caricate in altrettante pagine fisiche, non necessariamente contigue.
+**Si rinuncia ad avere una zona contigua** della memoria fisica **per ciascun processo**.
+La memoria virtuale del programma viene **suddivisa in porzioni** (_pagine virtuali_) di **lunghezza fissa** (potenze di 2).
+La memoria fisica viene divisa in pagine fisiche della _stessa dimensione_.
+Le pagine virtuali di un programma vengono caricate in altrettante pagine fisiche, non necessariamente contigue.
+![](Introduzione%20al%20C/44E465C2-EF50-4D5E-90EC-B6F6F1E6EDF0.png)
 
-### Struttura degli indirizzi virtuali
+### Struttura degli indirizzi virtuali e fisici
 Un indirizzo virtuale è costituito da un **numero di pagina virtuale** (_NVP_) e da uno _spiazzamento_ (**offset**) all’interno della pagina.
+![](Introduzione%20al%20C/2BA3AEC4-BAA7-4AEC-A94D-63737998878D.png)
+Un indirizzo fisico ha la **stessa struttura** di un indirizzo virtuale.
+![](Introduzione%20al%20C/8B500941-F106-42CE-86AB-8D63CF802148.png)
+Passando da un indirizzo virtuale ad uno fisico, l’unica parte che viene _tradotta_ è il **numero di pagina virtuale**, poiché pagine virtuali e fisiche hanno la _stessa dimensione_. Il meccanismo più semplice per la traduzione delle pagine virtuali è la **tabella delle pagine**, che associa ad ogni pagina virtuale la corrispondente pagina fisica. Questa tabella viene memorizzata nella **MMU** (_Memory Management Unit_), una memoria associativa molto veloce e di dimensioni ridotte. Le memorie associative permettono di _cercare un oggetto in più righe della tabella_, per velocizzare il processo di traduzione.
+Poiché la tabella delle pagine sarebbe diversa per ogni processo, per non doverla ricostruire ogni volta che si cambia programma, la tabella contiene anche _una colonna con l’ID del processo in esecuzione_.
+![](Introduzione%20al%20C/44E44B24-8DEC-4E02-8D33-4606231E3D9B.png)
 
-### Struttura degli indirizzi fisici
-Un indirizzo fisico ha la stessa struttura di un indirizzo virtuale. Passando da un indirizzo virtuale ad uno fisico, l’unica parte che viene _tradotta_ è il numero di pagina virtuale. Il meccanismo più semplice per la traduzione delle pagine virtuali è la **tabella delle pagine**, che associa ad ogni pagina virtuale la corrispondente pagina fisica. Questa tabella viene memorizzata nella **MMU** (_Memory Management Unit_)	, una memoria associativa molto veloce e di dimensioni ridotte. Le memorie associative permettono di cercare un oggetto in più righe della tabella, per velocizzare il processo di traduzione.
-Poiché la tabella delle pagine sarebbe diversa per ogni processo, per non doverla ricostruire ogni volta che si cambia programma, la tabella contiene anche una colonna con l’ID del processo in esecuzione.
+Esempio:
+* Spazio di indirizzamento virtuale
+	* Indirizzi da 32 bit ⇒ `2^32` indirizzi
+* Dimensione di pagina
+	* 4000 parole (o celle) ⇒ `2^12` byte (1 cella = 1 byte)
+* Numero di pagine dello spazio di indirizzamento virtuale
+	* `2^32 / 2^12 = 2^20` pagine
+* Spazio di indirizzamento fisico
+	* 4000000 di parole (o celle) ⇒ `2^22` indirizzi
+* Numero di pagine dello spazio di indirizzamento fisico
+	* `2^22 / 2^12 = 2^10` pagine
+![](Introduzione%20al%20C/BEF14891-1541-43D3-BAA8-80B5E3BA6213.png)
+
+### Tabella delle pagine
+La tabella delle pagine è il meccanismo più semplice per la traduzione da virtuale e fisico.
+![](Introduzione%20al%20C/3C412A4F-F1D3-4F71-942F-B28CEBA51EC5.png)
+
+### Memory Management Unit
+Per accelerare la traduzione da NPV a NPF si ricorre alla **MMU**, una _memoria associativa_ dalle dimensioni ridotte che contiene solo le informazioni sulle pagine più utilizzate.
+Dato che gli NPV e gli NPF si riferiscono alle pagine di un processo, ogni volta che il processo in esecuzione cambia la MMU dovrebbe essere riscritta. Per evitare ciò si aggiunge una _colonna_ che dice **a quale processo appartengono le pagine** ed un _registro_ che dice **qual è il processo attualmente in esecuzione**.
 
 ### Pagine residenti e non
-Durante l’esecuzione di un programma, solo un certo numero delle sue pagine virtuali è caricato in altrettante pagine fisiche. Tali pagine sono dette **residenti**. Ad ogni accesso alla memoria si controlla che l’indirizzo virtuale corrisponda ad una pagina residente, altrimenti si produce un interrupt di segnalazione di errore detto _page fault_. Il processo viene sospeso in attesa che la pagina richiesta venga caricata in memoria, eventualmente scaricando su disco una pagina già residente per liberare lo spazio necessario.
+Durante l’esecuzione di un programma, **solo un certo numero delle sue pagine virtuali è caricato** in altrettante pagine fisiche. Tali pagine sono dette **residenti**.
+Ad ogni accesso alla memoria _si controlla_ che _l’indirizzo virtuale_ corrisponda ad una **pagina residente**, altrimenti si produce un **interrupt di segnalazione** di errore detto _page fault_. Il processo viene allora **sospeso** in attesa che la pagina richiesta venga caricata in memoria, eventualmente scaricando su disco una pagina già residente per liberare lo spazio necessario.
 Su Windows, il file dove vengono salvate le pagine residenti si chiama _file di paging_. Nei sistemi Linux, si ha una partizione dedicata chiamata _swap_.
 
-## Gestione delle periferiche
-Sono meccanismi software a cui è affidato il compito di trasferire dati da e verso le periferiche. Consentono ai programmi applicativi di leggere o scrivere i dati con primitive di alto livello che nascondono la struttura fisica delle periferiche.
-Si distingue generalmente fra:
-* Driver fisici, che vengono utilizzati dal gestore delle interruzioni per il trasferimento dei dati
-* Driver logici, che fanno parte del sistema operativo e forniscono una gerarchia di memorie
+## Gestione del file system
+Il sistema operativo si occupa di **gestire i file** sulla memoria di massa:
+* Creare un file
+* Dare un nome al file
+* Collocare il file in un opportuno spazio nella memoria di massa
+* Accedere al file in lettura e scrittura
+La gestione dei file è _indipendente_ dalle caratteristiche fisiche della memoria di massa (HDD, SSD, NVMe).
+I file vengono inclusi all’interno di _directory_ (o _cataloghi_). Esse hanno una organizzazione tipicamente ad albero, anche se alcuni sistemi operativi permettono una struttura a grafo.
+![](Introduzione%20al%20C/9FAA7E1C-73B0-4638-866B-2492CDBA39ED.png)
 
+### Organizzazione dei file
+A ciascun utente è normalmente associata una directory specifica, detta _home directory_.
+Il livello di _protezione_ di un file indica quali operazioni possono essere eseguite da ciascun utente.
+Ciascun file ha un _pathname_ (o _nome completo_), che include l’intero cammino dalla radice dell’albero.
+Il _contesto_ di un utente all’interno del file system è la directory in cui correntemente si trova.
+
+## Gestione delle periferiche
+Sono meccanismi software a cui è affidato il compito di **trasferire dati da e verso le periferiche**. Consentono ai programmi applicativi di _leggere_ o _scrivere_ i dati con primitive di alto livello che _nascondono la struttura fisica delle periferiche_.
+Si distingue generalmente fra:
+* **Driver fisici**
+	* Vengono utilizzati dal gestore delle interruzioni per il trasferimento dei dati
+* **Driver logici**
+	* Fanno parte del sistema operativo e forniscono una gerarchia di memorie
+
+## Gestione dell’interfaccia utente
+Il sistema operativo fornisce un _interprete_ dei comandi inseriti dall’utente attraverso la tastiera o il mouse.
+L’interfaccia utente può essere:
+* Testuale
+	* DOS
+* Grafica
+	* Windows
+	* macOS
+	* Molte distro di Linux
+Consente l’inserimento di diversi comandi:
+* Esecuzione di programmi applicativi
+* Operazioni sulle periferiche
+* Configurazione dei servizi del sistema operativo
+* Operazioni sul file system
+	* Creazione
+	* Rimozione
+	* Copia
+	* Ricerca
+- - - -
 ## Catena di sviluppo in C
-1. Scrittura
-2. Traduzione
-3. Collegamento
-4. Caricamento
-5. Esecuzione
+Il C è un linguaggio **compilato**.
+Si possono individuare cinque passi per passare dalla definizione di un algoritmo ad un programma in esecuzione che lo implementa:
+![](Introduzione%20al%20C/453EE735-82A8-4C13-A505-3612423FDFD8.png)
+
+1. **Scrittura**
+	* Il programma, costituito da una sequenza di caratteri, viene **composto e modificato** usando un qualsiasi editor di testo
+	* Otteniamo così un **codice sorgente** memorizzato in memoria di massa in un file di testo (come `xyz.c`)
+2. **Traduzione**
+	* Il compilatore si occupa della **traduzione** dal linguaggio di alto livello al **linguaggio macchina**
+	* Durante questa fase si riconoscono i simboli, le parole ed i costrutti del linguaggio
+		*  Eventuali messaggi diagnostici segnalano errori di sintassi
+	* Viene generato il codice macchina in forma **binaria**: a partire dal codice sorgente si genera il **codice oggetto** in un file binario
+3. **Collegamento** o _Linking_
+	* Il collegatore (_linker_) deve collegare fra loro il file oggetto ed **altre librerie utilizzate**
+	* Si rendono **globalmente coerenti** i riferimenti agli indirizzi dei vari elementi collegati
+	* Si genera un **programma eseguibile**, un file binario che contiene il codice macchina del programma eseguibile completo, di nome `xyz.exe` (per l’eseguibile Windows)
+	* Messaggi di errore possono essere dovuti ad errori nel citare i nomi delle funzionalità di librerie esterne da collegare
+	* Il programma sarà effettivamente eseguibile solo dopo che il contenuto del file sarà stato **caricato nella memoria di lavoro** del calcolatore (RAM)
+4. **Caricamento** o _Loading_
+	* Il caricatore (_loader_) individua una porzione libera della memoria di lavoro e vi copia il contenuto del programma eseguibile
+		* Eventuali messaggi rivolti all’utente possono segnalare che **non c’è abbastanza memoria**
+5. **Esecuzione**
+	* Per eseguire il programma occorre fornire in ingresso i dati richiesti ed in uscita riceveremo i risultati
+	* Durante l’esecuzione possono verificarsi degli errori, detti _errori di run-time_, quali:
+		* Calcoli con risultati errati (ad esempio un _overflow_)
+		* Calcoli impossibili (divisione per zero, logaritmo di un numero negativo, radice quadrata di un numero negativo…)
+		* Errori nella concezione dell’algoritmo (l’algoritmo non risolve il problema dato)
+	* Tutti gli esempi citati si riferiscono ai cosiddetti _errori semantici_
+
 - - - -
 ## Linguaggio Macchina
 Il linguaggio macchina è un linguaggio di **basso livello** che viene progettato _attorno_ al calcolatore:
-* richiede di conoscere esattamente la struttura del calcolatore (la sua _architettura_)
-* è _specifico_ per ogni calcolatore (in genere per ogni _famiglia_ di calcolatori)
-permette di sfruttare al meglio le risorse fisiche della macchina
+* Richiede di conoscere esattamente la struttura del calcolatore (la sua _architettura_)
+* È _specifico_ per ogni calcolatore (in genere per ogni _famiglia_ di calcolatori)
+* Permette di sfruttare al meglio le risorse fisiche della macchina
 
-## Un modello semplificato di calcolatore
+### Un modello semplificato di calcolatore
 ![](Introduzione%20al%20C/Schermata%202020-11-25%20alle%2014.55.46.png)
 
-## Quali istruzioni mi servono?
-### Istruzioni I/O
+### Quali istruzioni mi servono?
+#### Istruzioni I/O
 * `READ`: legge un dato dal nastro di lettura e lo salva nell’accumulatore
 * `WRITE`: prende un dato dall’accumulatore e lo scrive sul nastro di scrittura
 
-### Gestione della memoria
+#### Gestione della memoria
 * `LOAD x`: carica il dato all’indirizzo `x` dalla memoria
 * `STORE x`: salva il dato all’indirizzo `x` della memoria
 
-### Operazioni aritmetiche
+#### Operazioni aritmetiche
 * `ADD x`: somma il contenuto della cella di memoria all’indirizzo `x` all’accumulatore 
 * `SUB x`: sottrae il contenuto della cella di memoria all’indirizzo `x` all’accumulatore
 * `MULT x`: moltiplica il contenuto della cella di memoria all’indirizzo `x` all’accumulatore
 * `DIV x`: divide il contenuto della cella di memoria all’indirizzo `x` all’accumulatore
 Il primo operando dell’operazione è quello contenuto nell’accumulatore, il secondo è quello specificato nel comando attraverso l’indirizzo di memoria
 
-### Controllo di flusso
+#### Controllo di flusso
 * `BR x`: salta direttamente all’istruzione x
 * `BEQ x`: salta all’istruzione x se il valore dell’accumulatore è uguale a zero
 * `BNE x`: salta all’istruzione x se il valore dell’accumulatore è diverso da zero
@@ -2156,7 +2226,7 @@ Il primo operando dell’operazione è quello contenuto nell’accumulatore, il 
 * `BGE x`: salta all’istruzione x se il valore dell’accumulatore è maggiore o uguale a 0
 * `END`: termina il programma
 
-## Come traduciamo un semplice programma?
+### Come traduciamo un semplice programma?
 In C:
 ```c
 scanf(“%d”, &x);
@@ -2166,15 +2236,15 @@ printf(“%d”, x + y);
 
 In linguaggio macchina:
 ```
-1. READ
-2. STORE 101
-3. READ
-4. ADD 101
-5. WRITE
+1. READ [Primo numero nell'accumulatore]
+2. STORE 101 [Primo numero nella cella 101]
+3. READ [Secondo numero nell'accumulatore]
+4. ADD 101 [Somma l'accumulatore alla cella 101]
+5. WRITE [Scrive il contenuto nell'accumulatore]
 6. END
 ```
 
-## Indirizzamento
+### Indirizzamento
 Tutte le istruzioni che interagiscono con la memoria possono sfruttare differenti approcci per accedere allo spazio di memorizzazione:
 * Indirizzamento _diretto_
 * Indirizzamento _indiretto_
@@ -2184,7 +2254,7 @@ Se assumiamo la generica istruzione `ISTR` otteniamo:
 * Indirizzamento **indiretto**: `ISTR@ 11` - carico il valore della cella all’indirizzo memorizzato _nella cella di memoria numero 11_
 * Indirizzamento **esplicito**: `ISTR=14` - carico _direttamente_ il valore 14
 
-Esempio: sommatoria di N numeri
+**Esempio**: sommatoria di N numeri
 In C:
 ```c
 scanf(“%d”, &n);
@@ -2199,38 +2269,90 @@ printf(“%d”, s);
 
 In linguaggio macchina:
 ```
-1. READ
-2. STORE 101
-3. LOAD= 0
-4. STORE 102
-5. LOAD 101
-6. BEQ 13
-7. SUB= 1
-8. STORE 101
-9. READ
+01. READ
+02. STORE 101 [1, 2 => scanf("%d", &n)]
+03. LOAD= 0
+04. STORE 102 [3, 4 => s = 0]
+05. LOAD 101
+06. BEQ 13 [Salta se n = 0]
+07. SUB= 1
+08. STORE 101 [7, 8 => n = n - 1
+09. READ [scanf("%d", &x)]
 10. ADD 102
-11. STORE 102
+11. STORE 102 [10, 11 => s = s + x]
 12. BR 5
 13. LOAD 102
-14. WRITE
+14. WRITE [printf("%d", s)]
 15. END
 ```
 
-## Gestire gli array
-Serve una cella per memorizzare il contatore degli elementi letti. Ciascun elemento verrà memorizzato all’indirizzo successivo a quello usato per il numero precedente.
-Si può usare l’indirizzamento indiretto per memorizzare gli elementi della sequenza in un indirizzo sempre diverso. Servirà utilizzare una cella di memoria per contenere l’indirizzo da utilizzare per l’elemento corrente.
+**Esempio**: invertire una sequenza
+In C:
+```c
+n = 0;
+do
+{
+	scanf("%d", &x[n]);
+	n++;
+} while(x[n - 1] != 0);
+
+for(i = n - 2; i >= 0; i--)
+	printf("%d", x[i]);
+```
+
+* **Come organizzare la memoria?**
+	* Mi serve una cella per memorizzare il contatore degli elementi letti
+	* Ciascun elemento verrà memorizzato all’indirizzo successivo a quello usato per il numero precedente
+* **Come posso memorizzare gli elementi della sequenza in un indirizzo sempre diverso?**
+	* Uso l’indirizzamento **indiretto**
+	* Avrò bisogno di una cella di memoria che contenga l’indirizzo da utilizzare per l’elemento _corrente_
+* **Una possibile soluzione**
+	* Indirizzo contatore elementi: 101
+	* Indirizzo elemento corrente: 102
+	* Indirizzi elementi: da 103 in poi
+
+In linguaggio macchina:
+```
+01. LOAD= 0
+02. STORE 101
+03. LOAD= 103
+04. STORE 102
+05. READ
+06. BEQ 15
+07. STORE@ 102
+08. LOAD 102
+09. ADD= 1
+10. STORE 102
+11. LOAD 101
+12. ADD= 1
+13. STORE 101
+14. BR 5
+15. LOAD 101
+16. BEQ 25
+17. SUB= 1
+18. STORE 101
+19. LOAD 102
+20. SUB= 1
+21. STORE 102
+22. LOAD@ 102
+23. WRITE
+14. BR 15
+25. END
+```
 
 ## Gestione della memoria con sottoprogrammi
 ### Gestione a pila o stack
 ![](Introduzione%20al%20C/Foto%2030%20nov%202020,%20093527.jpg)
 Un **record di attivazione** è una parte di memoria che serve al corretto funzionamento di una funzione e della sua terminazione.
-Il **record di attivazione** (RA) contiene:
+Il **record di attivazione** (_RA_) contiene:
 * Parametri attuali
 * Variabili locali
-* Indirizzo di ritorno (RetAdd)
-* (Valore precedente dello) stack pointer (SP)
+* Indirizzo di ritorno (_RetAdd_)
+* (Valore precedente dello) stack pointer (_SP_)
+![](Introduzione%20al%20C/4D9CA6BA-2D82-486F-BCB8-3BF689CD9F64.png)
 
 #### Funzionamento della chiamata
+* **Codice del chiamante**
 * Riserva memoria per il risultato (se previsto)
 * Assegna valore ai parametri attuali
 * Assegna l’indirizzo di ritorno
@@ -2238,31 +2360,35 @@ Il **record di attivazione** (RA) contiene:
 * Aggiorna l’indirizzo di base del nuovo record di attivazione
 * Assegna il nuovo valore allo stack pointer
 * Salta alla prima istruzione del chiamato
+* **Codice del chiamato**
 
 #### Il ritorno
+* **Codice del chiamato**
 * Riporta il valore dello stack pointer al valore precedente
 * Riporta il valore dell’indirizzo di base al valore precedente
 * Salta all’indirizzo di ritorno
 
 ## Ma il linguaggio macchina non dovrebbe essere binario?
 ### Linguaggio assemblativo e linguaggio macchina
-Quello visto finora è un _linguaggio assemblativo_ (_assembly_), un linguaggio macchina _simbolico_ per facilitare la lettura e scrittura dei programmi. La sua traduzione in linguaggio macchina (operata da un programma chiamato _assembler_) è molto semplice. Le regole di traduzione richiedono tuttavia diverse scelte progettuali:
-* Ad ogni tipo di istruzione viene associato un codice operativo binario
-* Viene definita la dimensione massima degli operandi (che dipende, tra le altre cose, dalla dimensione massima della memoria indirizzabile)
-* Viene quindi definita la dimensione finale che occuperà la traduzione di ogni possibile istruzione
+Quello visto finora è un _linguaggio assemblativo_ (_assembly_), un linguaggio macchina _simbolico_ per facilitare la lettura e scrittura dei programmi. La sua traduzione in linguaggio macchina (operata da un programma chiamato _assembler_) è molto semplice. Le regole di traduzione richiedono tuttavia **diverse scelte progettuali**:
+* Ad ogni tipo di istruzione viene associato un **codice operativo binario**
+* Viene definita la **dimensione massima degli operandi** (che dipende, tra le altre cose, dalla dimensione massima della memoria indirizzabile)
+* Viene quindi definita la **dimensione finale** che occuperà la traduzione di ogni possibile istruzione
 
 ## Costruiamo il nostro linguaggio macchina
 ### Codice operativo delle istruzioni
 ![](Introduzione%20al%20C/Foto%2030%20nov%202020,%20100143.jpg)
 
 ### Dimensione operandi ed istruzioni
-Per semplicità, ipotizziamo che la memoria indirizzabile nel nostro sistema sia 2^10 celle (o parole). Sempre per semplicità, ipotizziamo che anche le costanti numeriche nei programmi siano comprese tra 0 e 1023. Tutti gli operandi sono quindi rappresentabili con 10 bit. Il codice operativo richiede 5 bit. Le istruzioni richiedono 15 bit, ma noi ne useremo 16 (1 bit di _padding_).
+Per semplicità, ipotizziamo che la memoria indirizzabile nel nostro sistema sia `2^10` celle (o parole). Sempre per semplicità, ipotizziamo che anche le costanti numeriche nei programmi siano comprese tra 0 e 1023. Tutti gli operandi sono quindi rappresentabili con 10 bit. Il codice operativo richiede 5 bit. Le istruzioni richiedono 15 bit, ma noi ne useremo 16 (1 bit di _padding_).
+![](Introduzione%20al%20C/BB995665-587C-4D73-8F8C-3FF4393E93B7.png)
 - - - -
 ## Introduzione all’architettura del calcolatore e catena di programmazione in C
 ### La macchina di Von Neumann
 ![](Introduzione%20al%20C/IMG_9F6FA1B3CC58-1.jpeg)
 
 ### La memoria centrale
+![](Introduzione%20al%20C/86B38B11-99D6-4E26-9874-1A009A569086.png)
 
 ### L’unità di elaborazione (CPU)
 ![](Introduzione%20al%20C/5ECC0CE6-6F6E-48D1-9924-411B3AA902E0.png)
@@ -2278,25 +2404,34 @@ Per semplicità, ipotizziamo che la memoria indirizzabile nel nostro sistema sia
 * **Registro interruzioni**: gestisce le interruzioni delle periferiche
 * **Registro contatore di programma**: indirizzo della prossima istruzione da eseguire
 
+### Bus di sistema
 Tutta la CPU è collegata al Bus di sistema, ma non tutti i componenti della CPU sono connessi direttamente al Bus esterno. Le comunicazioni avvengono secondo un sistema _Master / Slave_.
 Esistono Bus per diversi scopi:
 * Bus dati
 * Bus indirizzi
 * Bus controlli
+![](Introduzione%20al%20C/60EFD431-941C-4082-88B9-FE5A113778BE.png)
 
 ### Interfacce periferiche
 Contengono le seguenti componenti:
 * Peripheral Data Register (PDR)
 * Peripheral Command Register (PCR)
 * Peripheral State Register (PSR)
+![](Introduzione%20al%20C/CF0E1CB9-FD19-4B98-80A7-74E78CAF76E8.png)
 
 Esempio:
 Supponiamo di dover eseguire un’istruzione che carica il contenuto della cella di memoria all’indirizzo 123 nel registro R1
 `0100000111101101 LOAD 123, R1`
 ![](Introduzione%20al%20C/048E48E5-5126-4ECC-BF37-413C821B52A5.png)
 * **Fase di fetch istruzione**: la CPU carica dalla memoria centrale la prossima istruzione da eseguire
+![](Introduzione%20al%20C/2D76A97B-C360-4197-BAF3-BEF3A63C2750.png)
 * **Fase di interpretazione istruzione**: comprendere l’istruzione presente nel registro
+![](Introduzione%20al%20C/39949166-7852-4DB9-89C2-B9CAFCDD3ED7.png)
 * **Fase di esecuzione istruzione**: eseguire l’istruzione _decodificata_ precedentemente
+![](Introduzione%20al%20C/38F90CFE-7C6F-4CC9-BA2D-847724D7EF02.png)
 
 ### Lettura e scrittura di un dato in memoria centrale
-![](Introduzione%20al%20C/E8AA1ABA-5E51-4763-9A00-D8547C52FB1A.png)
+**Lettura**:
+![](Introduzione%20al%20C/37B528B2-5176-4915-90FC-44655F32FD58.png)
+**Scrittura**:
+![](Introduzione%20al%20C/E5B63D01-57D8-48BF-8A5B-EB9DD28F1264.png)
