@@ -2024,9 +2024,9 @@ Gli stati di un processo possono essere:
 	* Coda dei processi pronti
 	* Round-robin
 	* Priorità dei processi
-4. Il processo in esecuzione passa in stato di _attesa_ poiché ha richiesto operazioni di I-O (_interruzione interna_). Questo corrisponde all’esecuzione dell’istruzione _chiamata a supervisore_ (**SuperVisor Call** o **SVC**).
+4. Il processo in esecuzione passa in stato di _attesa_ poiché ha richiesto operazioni di I/O (_interruzione interna_). Questo corrisponde all’esecuzione dell’istruzione _chiamata a supervisore_ (**SuperVisor Call** o **SVC**).
 5. Il processore è ora libero ed il secondo processo può essere eseguito. Il primo processo ha un _cambiamento di contesto_ ed il suo _contesto_ viene salvato nel suo _descrittore di processo_.
-6. Quando l’operazione di I-O si conclude per il primo processo, viene generata un’**interruzione esterna** dal _gestore delle interruzioni_.
+6. Quando l’operazione di I/O si conclude per il primo processo, viene generata un’**interruzione esterna** dal _gestore delle interruzioni_.
 7. Il processo in esecuzione viene interrotto ed il primo processo può essere di nuovo in _pronto_. Il kernel può ora decidere quale processo eseguire.
 
 _Pre-emption_: quando il quanto di tempo è scaduto, il kernel interrompe il processo in esecuzione. Così si cerca di garantire un uso equo della CPU a tutti i processi.
