@@ -1,0 +1,5 @@
+Questo è un file di prova che contiene finti indirizzi email.
+
+email@example.com
+example@example.com
+test@test.com
