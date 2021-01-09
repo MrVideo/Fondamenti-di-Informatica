@@ -6,6 +6,8 @@ l’ultimo nodo della lista il primo nodo. Nel caso la lista sia vuota o conteng
 la funzione non farà niente.
 */
 
+//! Funziona correttamente
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -50,7 +52,7 @@ void shift(lista *l)
 
     current -> next = head;
     previous -> next = NULL;
-    l = &current;
+    *l = current;
 }
 
 lista inserisci_testa(lista l, int n)
