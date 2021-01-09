@@ -16,63 +16,58 @@ struct nodo {
 
 typedef struct nodo *lista;
 
-void shift(lista l);
+void shift(lista *l);
 lista inserisci_testa(lista l, int n);
-lista inserisci_coda(lista l, int n);
+lista inserisci(lista l, int n);
 void stampa(lista l);
 
 int main()
 {
-    lista l;
-    l = NULL;
+    lista l = NULL;
 
-    l = inserisci_testa(l, 1);
-    l = inserisci_coda(l, 2);
-    l = inserisci_coda(l, 3);
+    l = inserisci(l, 1);
+    l = inserisci(l, 2);
+    l = inserisci(l, 3);
 
     stampa(l);
 
-    shift(l);
-    
+    shift(&l);
+
     stampa(l);
 
     return 0;
 }
 
-void shift(lista l)
+void shift(lista *l)
 {
-    lista current = l, previous = NULL, head = l;
+    lista current = *l, previous = NULL, head = *l;
 
-    if(current == NULL || current -> next == NULL)
-        printf("\nNon può essere applicata la funzione shift alla lista\n");
-    else
+    while(current -> next != NULL)
     {
-        while(current -> next != NULL)
-        {
-            previous = current;
-            current = current -> next;
-        }
-        previous -> next = NULL;
-        current -> next = l;
-        l = current;
+        previous = current;
+        current = current -> next;
     }
+
+    current -> next = head;
+    previous -> next = NULL;
+    l = &current;
 }
 
 lista inserisci_testa(lista l, int n)
 {
-    struct nodo *tmp = malloc(sizeof(struct nodo));
-    tmp -> next = NULL;
+    lista tmp = malloc(sizeof(struct nodo));
     tmp -> el = n;
+    tmp -> next = NULL;
     return tmp;
 }
 
-lista inserisci_coda(lista l, int n)
+lista inserisci(lista l, int n)
 {
     if(l == NULL)
         return inserisci_testa(l, n);
     else
     {
-        l -> next = inserisci_coda(l -> next, n);
+        l -> next = inserisci(l -> next, n);
         return l;
     }
 }
