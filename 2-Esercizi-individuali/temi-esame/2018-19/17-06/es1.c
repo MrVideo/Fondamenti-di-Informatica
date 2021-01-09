@@ -27,19 +27,18 @@ int main()
     
     codifica(&bin1[0], &rlc[0], 9);
 
-    printf("Bin1:\n");
-    for(i = 0; i < 11; i++)
+    printf("\nBin1:\n");
+    for(i = 0; i < 10; i++)
         printf("%d ", rlc[i]);
     printf("\n");
 
     for(i = 0; i < 10; i++)
         rlc[i] = 0;
-    printf("\nClear done.\n");
 
     codifica(&bin2[0], &rlc[0], 9);
 
-    printf("Bin2:\n");
-    for(i = 0; i < 11; i++)
+    printf("\nBin2:\n");
+    for(i = 0; i < 10; i++)
         printf("%d ", rlc[i]);
     printf("\n");
 
@@ -48,27 +47,23 @@ int main()
 
 void codifica(int *binario, int *rlc, int n)
 {
-    int i = 0, j, k = 0;
+    int i = 0;
     
-    if(*binario == 1)
-        j = 1;
+    if(n == 0)
+        return;
     else
-        j = 0;
-    do
     {
-        while(*(binario + k) == 0)
+        while(*(binario + i) == 0)
         {
-            *(rlc + j) += 1;
-            k++;
+            *rlc += 1;
+            i++;
         }
 
         while(*(binario + i) == 1)
-        {
-            *(rlc + j) += 1;
-            k++;
+        {   
+            *(rlc + 1) += 1;
+            i++;
+            codifica(binario + i, rlc + 2, n - i);
         }
-        j++;
-
-        i = *(rlc + j) - 1;
-    } while(i <= n);
+    }
 }
