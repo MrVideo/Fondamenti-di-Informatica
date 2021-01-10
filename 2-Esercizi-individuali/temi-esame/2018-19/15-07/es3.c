@@ -24,36 +24,30 @@ int main()
 {
     char filename[30], phonenum[30], prefix[30] = "+39";
     FILE *input;
-    contatto record;
+    contatto record[100];
+    int i;
 
     system("clear");
 
-    printf("Inserisci il nome del file: ");
+    printf("Inserisci il percorso del file: ");
     scanf("%s", filename);
 
     input = fopen(filename, "rb+");
-    rewind(input);
+    
+    fread(&record[i], sizeof(contatto), 100, input); //Lettura di tutto l'array di struct
 
-    while(!feof(input) && !ferror(input))
+    for (i = 0; i < 100; i++)
     {
-        fread(&record, sizeof(contatto), 1, input);
-
-        strcpy(phonenum, record.tel);
-
-        if(phonenum[0] == '0')
-            phonenum[0] = '+';
-        else if(phonenum[0] >= 49 && phonenum[0] <= 57)
+        if(record[i].tel[0] == '0')
+            record[i].tel[0] = '+';
+        else if(record[i].tel[0] >= 49 && record[i].tel[0] <= 57)
         {
-            strcat(prefix, phonenum);
-            strcpy(phonenum, prefix);
+            sprintf(phonenum, "+39%s", record[i].tel);
+            strcpy(record[i].tel, phonenum);
         }
-
-        strcpy(record.tel, phonenum);
-
-        fwrite(&record, sizeof(contatto), 1, input);
-
-        fseek(input, sizeof(contatto), SEEK_CUR);
     }
+
+    fwrite(&record[i], sizeof(contatto), 100, input);
 
     fclose(input);
 
